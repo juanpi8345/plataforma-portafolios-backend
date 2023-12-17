@@ -43,5 +43,4 @@ public class AuthController {
         UserDetails user=userRepository.findByUsername(principal.getName());
         return (User) user;
     }
-
 }
