@@ -38,7 +38,7 @@ public class AuthController {
     public ResponseEntity<AuthenticationResponse> register(@RequestBody UserDTO user){
         return ResponseEntity.ok(authService.register(user));
     }
-    @GetMapping("/actual-usuario")
+    @GetMapping("/get")
     public User obtenerUsuarioActual(Principal principal){
         UserDetails user=userRepository.findByUsername(principal.getName());
         return (User) user;
