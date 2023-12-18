@@ -1,11 +1,14 @@
 package com.plataforma.portafolios.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,7 +21,9 @@ public class Skill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long skillId;
     private byte[] image;
+    @NotNull
     private String title;
+    @JsonIgnore
     @ManyToMany(mappedBy = "skills")
-    private List<Profile> profiles;
+    private List<Profile> profiles = new ArrayList<>();
 }

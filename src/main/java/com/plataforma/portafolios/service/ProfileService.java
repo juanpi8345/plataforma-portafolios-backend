@@ -1,11 +1,14 @@
 package com.plataforma.portafolios.service;
 
 import com.plataforma.portafolios.model.Profile;
+import com.plataforma.portafolios.model.Project;
+import com.plataforma.portafolios.model.Skill;
 import com.plataforma.portafolios.model.User;
 import com.plataforma.portafolios.repository.IProfileRepository;
 import com.plataforma.portafolios.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ProfileService implements IProfileService {
@@ -20,8 +23,19 @@ public class ProfileService implements IProfileService {
     public void saveProfile(Profile profile, Long userId) {
         User user = userRepo.findById(userId).orElse(null);
         if(user != null){
+            if(profile.getProjects() != null){
+                for(Project pr : profile.getProjects()){
+                    pr.setProfile(profile);
+                }
+            }
+            if(profile.getSkills() != null){
+                for(Skill sk : profile.getSkills()){
+                    sk.getProfiles().add(profile);
+                }
+            }
             profileRepo.save(profile);
             user.setProfile(profile);
+            userRepo.save(user);
         }
     }
 
@@ -40,5 +54,18 @@ public class ProfileService implements IProfileService {
     @Override
     public Profile getProfile(Long profileId) {
         return profileRepo.findById(profileId).orElse(null);
+    }
+
+    public void uploadImage(Long profileId, MultipartFile imageFile) {
+        Profile profile = profileRepo.findById(profileId).orElse(null);
+        if (profile != null) {
+            try {
+                byte[] imageData = imageFile.getBytes();
+                profile.setImage(imageData);
+                profileRepo.save(profile);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -3,6 +3,8 @@ package com.plataforma.portafolios.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.plataforma.portafolios.util.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,14 +26,18 @@ public class User implements UserDetails {
      @Id
      @GeneratedValue(strategy = GenerationType.IDENTITY)
      private Long userId;
+     @NotNull
      private String username;
+     @Email
      private String email;
      @JsonIgnore
+     @NotNull
      private String password;
      @JsonIgnore
      @Enumerated(EnumType.STRING)
+     @NotNull
      private Role role;
-     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
      @JoinColumn(name = "profileId")
      private Profile profile;
 

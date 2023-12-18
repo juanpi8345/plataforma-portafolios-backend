@@ -19,11 +19,12 @@ public class SkillService implements ISkillService {
     @Override
     public void saveSkill(Skill skill, Long profileId) {
         Profile profile = profileRepo.findById(profileId).orElse(null);
-        if(profile != null){
-            Skill sk = skillRepo.findByTitle(skill.getTitle());
-            if(sk == null)
+        if (profile != null) {
+            Skill existingSkill = skillRepo.findByTitle(skill.getTitle());
+            if (existingSkill == null)
                 skillRepo.save(skill);
-
+            else
+                skill = existingSkill;
             skill.getProfiles().add(profile);
             skillRepo.save(skill);
             profile.getSkills().add(skill);

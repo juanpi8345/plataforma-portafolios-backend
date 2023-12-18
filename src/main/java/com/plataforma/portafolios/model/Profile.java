@@ -1,11 +1,13 @@
 package com.plataforma.portafolios.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,15 +19,16 @@ public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long profileId;
+    @NotNull
     private String name;
     private byte[] image;
     @OneToMany(mappedBy = "profile", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Project> projects;
-    @ManyToMany()
+    private List<Project> projects = new ArrayList<>();
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "profile_skills",
             joinColumns = @JoinColumn(name="profileId"),
             inverseJoinColumns = @JoinColumn(name="skillId")
     )
-    private List<Skill> skills;
+    private List<Skill> skills = new ArrayList<>();
 }
