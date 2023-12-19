@@ -11,15 +11,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @Validated
 @RequestMapping("/skills")
 public class SkillController {
     @Autowired
     private IProfileService profileServ;
-
     @Autowired
     private ISkillService skillServ;
+
+    @GetMapping("/get/profile/{profileId}")
+    public ResponseEntity<List<Skill>> getProfileSkills(@PathVariable Long profileId){
+        Profile profile = profileServ.getProfile(profileId);
+        if(profile != null)
+            return ResponseEntity.ok(profile.getSkills());
+        return ResponseEntity.notFound().build();
+    }
 
     @PostMapping("/add/profile/{profileId}")
     public ResponseEntity<Skill> addSkill(@Valid @RequestBody Skill skill, @PathVariable Long profileId){
