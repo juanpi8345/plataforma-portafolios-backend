@@ -38,6 +38,11 @@ public class SkillService implements ISkillService {
     }
 
     @Override
+    public Skill getSkill(Long skillId) {
+        return skillRepo.findById(skillId).orElse(null);
+    }
+
+    @Override
     public void editSkill(Skill skillRequest) {
         Skill skill = skillRepo.findById(skillRequest.getSkillId()).orElse(null);
         if(skill != null){

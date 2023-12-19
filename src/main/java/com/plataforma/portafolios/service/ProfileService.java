@@ -20,23 +20,8 @@ public class ProfileService implements IProfileService {
     private IUserRepository userRepo;
 
     @Override
-    public void saveProfile(Profile profile, Long userId) {
-        User user = userRepo.findById(userId).orElse(null);
-        if(user != null){
-            if(profile.getProjects() != null){
-                for(Project pr : profile.getProjects()){
-                    pr.setProfile(profile);
-                }
-            }
-            if(profile.getSkills() != null){
-                for(Skill sk : profile.getSkills()){
-                    sk.getProfiles().add(profile);
-                }
-            }
+    public void saveProfile(Profile profile) {
             profileRepo.save(profile);
-            user.setProfile(profile);
-            userRepo.save(user);
-        }
     }
 
     @Override
