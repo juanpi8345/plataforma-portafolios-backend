@@ -26,7 +26,7 @@ public class ProjectController {
     @Autowired
     private IUserService userServ;
 
-    @GetMapping("/get}")
+    @GetMapping("/get")
     public ResponseEntity<List<Project>> getUserProjects(Principal principal){
         Profile profile = userServ.getLogedUser(principal).getProfile();
         if(profile!=null)
