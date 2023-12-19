@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,14 +27,13 @@ import java.util.List;
 public class ProfileController {
     @Autowired
     private IUserService userServ;
-
     @Autowired
     private IProfileService profileServ;
 
-    @PostMapping("/create/user/{userId}")
-    public ResponseEntity<Profile> createProfile(@PathVariable Long userId){
-        User user = userServ.getUserById(userId);
-        if(user != null){
+    @PostMapping("/create")
+    public ResponseEntity<Profile> createProfile(Principal principal){
+        User user = userServ.getLogedUser(principal);
+        if(user != null && user.getProfile() == null){
             Profile pr = new Profile();
             pr.setName(user.getUsername());
             user.setProfile(pr);
@@ -43,9 +43,9 @@ public class ProfileController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/add/image/profile/{profileId}")
-    public ResponseEntity<String> uploadImage(@PathVariable Long profileId, @RequestParam MultipartFile imageFile){
-        profileServ.uploadImage(profileId,imageFile);
+    @PostMapping("/add/image")
+    public ResponseEntity<String> uploadImage(Principal principal, @RequestParam MultipartFile imageFile){
+        profileServ.uploadImage(userServ.getLogedUser(principal).getProfile().getProfileId(),imageFile);
         return ResponseEntity.ok("Image uploaded");
     }
 
