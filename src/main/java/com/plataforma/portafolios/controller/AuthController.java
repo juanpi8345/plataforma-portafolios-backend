@@ -22,10 +22,6 @@ import java.security.Principal;
 public class AuthController {
     @Autowired
     private AuthenticationService authService;
-
-    @Autowired
-    private IUserRepository userRepository;
-
     @Autowired
     private IUserService userServ;
 
@@ -39,8 +35,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.register(user));
     }
     @GetMapping("/get")
-    public User obtenerUsuarioActual(Principal principal){
-        UserDetails user=userRepository.findByUsername(principal.getName());
-        return (User) user;
+    public User getLogedUser(Principal principal){
+        return userServ.getLogedUser(principal);
     }
 }

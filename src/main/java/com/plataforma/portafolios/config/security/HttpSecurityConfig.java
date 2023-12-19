@@ -30,7 +30,8 @@ public class HttpSecurityConfig {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authConfig ->{
-                   authConfig.requestMatchers(HttpMethod.POST,"/auth/**").permitAll();
+                   authConfig.requestMatchers(HttpMethod.POST,"/auth/register").permitAll();
+                   authConfig.requestMatchers(HttpMethod.POST,"/auth/login").permitAll();
                    authConfig.anyRequest().authenticated();
                 });
 

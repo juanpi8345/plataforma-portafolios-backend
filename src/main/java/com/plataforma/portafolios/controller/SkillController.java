@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -22,43 +23,50 @@ public class SkillController {
     @Autowired
     private ISkillService skillServ;
 
-    @GetMapping("/get/profile/{profileId}")
-    public ResponseEntity<List<Skill>> getProfileSkills(@PathVariable Long profileId){
-        Profile profile = profileServ.getProfile(profileId);
+    @Autowired
+    private IUserService userServ;
+
+    @GetMapping("/get")
+    public ResponseEntity<List<Skill>> getProfileSkills(Principal principal){
+        Profile profile = userServ.getLogedUser(principal).getProfile();
         if(profile != null)
             return ResponseEntity.ok(profile.getSkills());
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/add/profile/{profileId}")
-    public ResponseEntity<Skill> addSkill(@Valid @RequestBody Skill skill, @PathVariable Long profileId){
-        Profile pr = profileServ.getProfile(profileId);
+    @PostMapping("/add")
+    public ResponseEntity<Skill> addSkill(@Valid @RequestBody Skill skill, Principal principal){
+        Profile pr = userServ.getLogedUser(principal).getProfile();
+        boolean exists = false;
+        if(skillServ.getSkillByTitle(skill.getTitle()) != null)
+            exists = true;
         if(pr != null){
             pr.getSkills().add(skill);
             skill.getProfiles().add(pr);
-            profileServ.saveProfile(pr);
+            if(!exists)
+                profileServ.saveProfile(pr);
             return ResponseEntity.ok(skill);
         }
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/edit/profile/{profileId}")
-    public ResponseEntity<Skill> editSkill(@PathVariable Long profileId, @Valid @RequestBody Skill skillRequest){
-        Profile profile = profileServ.getProfile(profileId);
+    @PutMapping("/edit")
+    public ResponseEntity<Skill> editSkill(@Valid @RequestBody Skill skillRequest, Principal principal){
+        Profile profile = userServ.getLogedUser(principal).getProfile();
         Skill skill = skillServ.getSkill(skillRequest.getSkillId());
         if(skill!= null){
             skill.setTitle(skillRequest.getTitle());
             skill.setImage(skillRequest.getImage());
-            skillServ.saveSkill(skill,profileId);
+            skillServ.saveSkill(skill,profile.getProfileId());
             return ResponseEntity.ok(skill);
         }
 
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/delete/{skillId}/profile/{profileId}")
-    public ResponseEntity<?> deleteSkill(@PathVariable Long skillId, @PathVariable Long profileId){
-        Profile profile = profileServ.getProfile(profileId);
+    @DeleteMapping("/delete/{skillId}")
+    public ResponseEntity<?> deleteSkill(@PathVariable Long skillId, Principal principal){
+        Profile profile = userServ.getLogedUser(principal).getProfile();
         Skill skill = skillServ.getSkill(skillId);
         if(profile != null && skill!=null){
             profile.getSkills().remove(skill);

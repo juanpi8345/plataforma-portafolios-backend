@@ -7,9 +7,12 @@ import com.plataforma.portafolios.repository.IUserRepository;
 import com.plataforma.portafolios.util.Role;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.security.Principal;
 
 @Service
 public class UserService implements IUserService {
@@ -33,6 +36,12 @@ public class UserService implements IUserService {
     @Override
     public User getUser(String username) {
         return userRepo.findByUsername(username);
+    }
+
+    @Override
+    public User getLogedUser(Principal principal) {
+        User user=userRepo.findByUsername(principal.getName());
+        return user;
     }
 
     @Override

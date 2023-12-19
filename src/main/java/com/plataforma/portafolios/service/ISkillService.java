@@ -8,5 +8,7 @@ public interface ISkillService {
     void deleteSkill(Long skillId);
 
     Skill getSkill(Long skillId);
+
+    Skill getSkillByTitle(String title);
     void editSkill(Skill skillRequest);
 }

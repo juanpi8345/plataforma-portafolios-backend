@@ -30,6 +30,11 @@ public class ProjectService implements IProjectService {
     }
 
     @Override
+    public Project getProject(Long projectId) {
+        return projectRepo.findById(projectId).orElse(null);
+    }
+
+    @Override
     public void editProject(Project project) {
         Project pr = projectRepo.findById(project.getProjectId()).orElse(null);
         if(pr != null){
