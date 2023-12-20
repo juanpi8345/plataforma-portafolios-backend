@@ -3,6 +3,7 @@ package com.plataforma.portafolios.service;
 import com.plataforma.portafolios.dto.AuthenticationRequest;
 import com.plataforma.portafolios.dto.AuthenticationResponse;
 import com.plataforma.portafolios.dto.UserDTO;
+import com.plataforma.portafolios.model.Profile;
 import com.plataforma.portafolios.model.User;
 import com.plataforma.portafolios.repository.IUserRepository;
 import com.plataforma.portafolios.util.Role;
@@ -48,6 +49,9 @@ public class AuthenticationService {
                 userToRegister.setRole(Role.EMPLOYEE);
             else
                 userToRegister.setRole(Role.EMPLOYEER);
+            Profile pr = new Profile();
+            pr.setName(user.getUsername());
+            userToRegister.setProfile(pr);
             userRepository.save(userToRegister);
         }
 

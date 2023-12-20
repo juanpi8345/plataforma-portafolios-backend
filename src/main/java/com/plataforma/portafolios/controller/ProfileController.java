@@ -30,7 +30,7 @@ public class ProfileController {
     @Autowired
     private IProfileService profileServ;
 
-    @PostMapping("/create")
+    /*@PostMapping("/create")
     public ResponseEntity<Profile> createProfile(Principal principal){
         User user = userServ.getLogedUser(principal);
         if(user != null && user.getProfile() == null){
@@ -41,7 +41,7 @@ public class ProfileController {
             return ResponseEntity.ok(pr);
         }
         return ResponseEntity.notFound().build();
-    }
+    }*/
 
     @PostMapping("/add/image")
     public ResponseEntity<String> uploadImage(Principal principal, @RequestParam MultipartFile imageFile){
