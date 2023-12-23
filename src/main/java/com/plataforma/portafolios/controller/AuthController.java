@@ -19,6 +19,8 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin("http://localhost:4200/")
+
 public class AuthController {
     @Autowired
     private AuthenticationService authService;
@@ -32,7 +34,9 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody UserDTO user){
-        return ResponseEntity.ok(authService.register(user));
+        if(authService.register(user) != null)
+            return ResponseEntity.ok(authService.register(user));
+        return ResponseEntity.status(409).build();
     }
     @GetMapping("/get")
     public User getLogedUser(Principal principal){

@@ -54,7 +54,9 @@ public class AuthenticationService {
             userToRegister.setProfile(pr);
             userRepository.save(userToRegister);
         }
-
-        return new AuthenticationResponse(jwtService.getToken(userToRegister));
+        if(userToRegister!= null)
+            return new AuthenticationResponse(jwtService.getToken(userToRegister));
+        else
+            return null;
     }
 }
