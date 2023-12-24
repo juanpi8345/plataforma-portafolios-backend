@@ -39,7 +39,7 @@ public class AuthController {
         return ResponseEntity.status(409).build();
     }
     @GetMapping("/get")
-    public User getLogedUser(Principal principal){
-        return userServ.getLogedUser(principal);
+    public ResponseEntity<User> getLoggedUser(Principal principal){
+        return ResponseEntity.ok(userServ.getLogedUser(principal));
     }
 }
