@@ -23,6 +23,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/profile")
+@CrossOrigin("http://localhost:4200/")
 @Validated
 public class ProfileController {
     @Autowired
@@ -47,6 +48,39 @@ public class ProfileController {
     public ResponseEntity<String> uploadImage(Principal principal, @RequestParam MultipartFile imageFile){
         profileServ.uploadImage(userServ.getLogedUser(principal).getProfile().getProfileId(),imageFile);
         return ResponseEntity.ok("Image uploaded");
+    }
+
+    @PutMapping("/edit/name")
+    public ResponseEntity<?> editName(Principal principal, @RequestParam String name){
+        Profile profile = userServ.getLogedUser(principal).getProfile();
+        if(profile != null){
+            profile.setName(name);
+            profileServ.saveProfile(profile);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @PutMapping("/edit/occupation")
+    public ResponseEntity<?> editOccupation(Principal principal, @RequestParam String occupations){
+        Profile profile = userServ.getLogedUser(principal).getProfile();
+        if(profile != null){
+            profile.setOccupations(occupations);
+            profileServ.saveProfile(profile);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @PutMapping("/edit/description")
+    public ResponseEntity<?> editDescription(Principal principal, @RequestParam String description){
+        Profile profile = userServ.getLogedUser(principal).getProfile();
+        if(profile != null){
+            profile.setDescription(description);
+            profileServ.saveProfile(profile);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
 

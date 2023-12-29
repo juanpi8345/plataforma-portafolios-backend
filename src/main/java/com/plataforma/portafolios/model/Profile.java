@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,10 @@ public class Profile {
     @NotNull
     private String name;
     private byte[] image;
+    @Lob
+    @Length(max = 1000)
+    private String description;
+    private String occupations;
     @OneToMany(mappedBy = "profile", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Project> projects = new ArrayList<>();
     @ManyToMany(cascade = CascadeType.ALL)
