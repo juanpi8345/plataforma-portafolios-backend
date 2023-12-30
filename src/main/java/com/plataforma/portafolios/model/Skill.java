@@ -20,6 +20,8 @@ public class Skill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long skillId;
+    @Lob
+    @Column(name = "image", columnDefinition="MEDIUMBLOB")
     private byte[] image;
     @NotNull
     private String title;

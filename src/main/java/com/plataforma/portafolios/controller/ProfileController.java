@@ -47,7 +47,7 @@ public class ProfileController {
     @PostMapping("/add/image")
     public ResponseEntity<String> uploadImage(Principal principal, @RequestParam MultipartFile imageFile){
         profileServ.uploadImage(userServ.getLogedUser(principal).getProfile().getProfileId(),imageFile);
-        return ResponseEntity.ok("Image uploaded");
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/edit/name")
@@ -82,6 +82,8 @@ public class ProfileController {
         }
         return ResponseEntity.badRequest().build();
     }
+
+
 
 
 }

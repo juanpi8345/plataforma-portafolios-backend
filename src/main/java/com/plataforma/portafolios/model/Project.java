@@ -21,6 +21,8 @@ public class Project {
     private Long projectId;
     @NotNull
     private String name;
+    @Lob
+    @Column(name = "image", columnDefinition="MEDIUMBLOB")
     private byte[] image;
     private String description;
     private LocalDate start;

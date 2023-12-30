@@ -22,6 +22,8 @@ public class Profile {
     private Long profileId;
     @NotNull
     private String name;
+    @Lob
+    @Column(name = "image", columnDefinition="MEDIUMBLOB")
     private byte[] image;
     @Lob
     @Length(max = 1000)
