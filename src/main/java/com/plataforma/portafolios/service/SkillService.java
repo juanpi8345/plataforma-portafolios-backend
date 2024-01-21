@@ -7,6 +7,8 @@ import com.plataforma.portafolios.repository.ISkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SkillService implements ISkillService {
 
@@ -19,12 +21,8 @@ public class SkillService implements ISkillService {
     @Override
     public void saveSkill(Skill skill, Long profileId) {
         Profile profile = profileRepo.findById(profileId).orElse(null);
-        if (profile != null) {
-            Skill existingSkill = skillRepo.findByTitle(skill.getTitle());
-            if (existingSkill == null)
-                skillRepo.save(skill);
-            else
-                skill = existingSkill;
+        Skill skill1 = skillRepo.findByTitle(skill.getTitle());
+        if (profile != null && skill!=null) {
             skill.getProfiles().add(profile);
             skillRepo.save(skill);
             profile.getSkills().add(skill);
@@ -38,8 +36,18 @@ public class SkillService implements ISkillService {
     }
 
     @Override
+    public List<Skill> getSkillContaining(String query) {
+        return skillRepo.findByTitleContaining(query);
+    }
+
+    @Override
     public Skill getSkill(Long skillId) {
         return skillRepo.findById(skillId).orElse(null);
+    }
+
+    @Override
+    public List<Skill> getAll() {
+        return skillRepo.findAll();
     }
 
     @Override

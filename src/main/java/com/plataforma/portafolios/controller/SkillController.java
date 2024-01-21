@@ -17,6 +17,7 @@ import java.util.List;
 @RestController
 @Validated
 @RequestMapping("/skills")
+@CrossOrigin("http://localhost:4200/")
 public class SkillController {
     @Autowired
     private IProfileService profileServ;
@@ -26,6 +27,14 @@ public class SkillController {
     @Autowired
     private IUserService userServ;
 
+    @GetMapping("/getAll")
+    public ResponseEntity<List<Skill>> getAllSkills(Principal principal){
+        Profile profile = userServ.getLogedUser(principal).getProfile();
+        if(profile != null)
+            return ResponseEntity.ok(skillServ.getAll());
+        return ResponseEntity.notFound().build();
+    }
+
     @GetMapping("/get")
     public ResponseEntity<List<Skill>> getProfileSkills(Principal principal){
         Profile profile = userServ.getLogedUser(principal).getProfile();
@@ -34,18 +43,25 @@ public class SkillController {
         return ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Skill>> searchSkills(Principal principal, @RequestParam String query){
+        Profile profile = userServ.getLogedUser(principal).getProfile();
+        if(profile != null)
+            return ResponseEntity.ok(skillServ.getSkillContaining(query));
+        return ResponseEntity.notFound().build();
+    }
+
     @PostMapping("/add")
-    public ResponseEntity<Skill> addSkill(@Valid @RequestBody Skill skill, Principal principal){
+    public ResponseEntity<Skill> addSkill(@Valid @RequestParam String title, Principal principal){
         Profile pr = userServ.getLogedUser(principal).getProfile();
-        boolean exists = false;
-        if(skillServ.getSkillByTitle(skill.getTitle()) != null)
-            exists = true;
-        if(pr != null){
-            pr.getSkills().add(skill);
-            skill.getProfiles().add(pr);
-            if(!exists)
+        Skill sk = skillServ.getSkillByTitle(title);
+        if(pr != null && sk != null) {
+            if(!pr.getSkills().contains(sk)){
+                pr.getSkills().add(sk);
+                sk.getProfiles().add(pr);
                 profileServ.saveProfile(pr);
-            return ResponseEntity.ok(skill);
+            }
+            return ResponseEntity.ok(sk);
         }
         return ResponseEntity.notFound().build();
     }

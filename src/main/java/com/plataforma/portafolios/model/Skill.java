@@ -21,8 +21,7 @@ public class Skill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long skillId;
     @Lob
-    @Column(name = "image", columnDefinition="MEDIUMBLOB")
-    private byte[] image;
+    private String image;
     @NotNull
     private String title;
     @JsonIgnore
