@@ -1,4 +1,8 @@
 insert into skills values
+	('',"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Typescript_logo_2020.svg/2048px-Typescript_logo_2020.svg.png","Typescript"),
+    ('',"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Database-mysql.svg/640px-Database-mysql.svg.png","MySQL"),
+    ('',"https://reactiveprogramming.io/_next/image?url=%2Fbooks%2Freactive-programming%2Ftechs%2Fmongodb.png&w=256&q=75","MongoDB"),
+    ('',"https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Postgresql_elephant.svg/1200px-Postgresql_elephant.svg.png","PostgreeSQL"),
 	('',"https://cdn-icons-png.flaticon.com/256/174/174854.png","HTML5"),
     ('',"https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/CSS3_logo.svg/240px-CSS3_logo.svg.png","CSS3"),
 	('',"https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Angular_full_color_logo.svg/800px-Angular_full_color_logo.svg.png","Angular"),
