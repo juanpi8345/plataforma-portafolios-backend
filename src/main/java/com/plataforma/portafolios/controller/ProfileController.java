@@ -11,12 +11,16 @@ import com.plataforma.portafolios.service.IUserService;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,22 +35,32 @@ public class ProfileController {
     @Autowired
     private IProfileService profileServ;
 
-    /*@PostMapping("/create")
-    public ResponseEntity<Profile> createProfile(Principal principal){
-        User user = userServ.getLogedUser(principal);
-        if(user != null && user.getProfile() == null){
-            Profile pr = new Profile();
-            pr.setName(user.getUsername());
-            user.setProfile(pr);
-            userServ.saveUser(user);
-            return ResponseEntity.ok(pr);
-        }
-        return ResponseEntity.notFound().build();
-    }*/
+    @GetMapping("/get/image")
+    public ResponseEntity<byte[]> getProfileImage(Principal principal) {
+        Profile profile = userServ.getLogedUser(principal).getProfile();
+
+        if (profile == null || profile.getImage() == null)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(profile.getImage());
+    }
 
     @PostMapping("/add/image")
-    public ResponseEntity<String> uploadImage(Principal principal, @RequestParam MultipartFile imageFile){
-        profileServ.uploadImage(userServ.getLogedUser(principal).getProfile().getProfileId(),imageFile);
+    public ResponseEntity<?> uploadImage(Principal principal, @RequestParam MultipartFile image) throws IOException {
+        Profile profile = userServ.getLogedUser(principal).getProfile();
+
+        if (profile == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró el perfil asociado al usuario.");
+        if (image.isEmpty())
+            return ResponseEntity.badRequest().body("La imagen está vacía.");
+
+        String contentType = image.getContentType();
+        if (contentType == null || !contentType.startsWith("image")) {
+            return ResponseEntity.badRequest().body("El archivo no es una imagen válida.");
+        }
+        profile.setImage(image.getBytes());
+        profileServ.saveProfile(profile);
+
         return ResponseEntity.ok().build();
     }
 
