@@ -7,8 +7,14 @@ import com.plataforma.portafolios.model.User;
 import com.plataforma.portafolios.repository.IProfileRepository;
 import com.plataforma.portafolios.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ProfileService implements IProfileService {
@@ -18,6 +24,9 @@ public class ProfileService implements IProfileService {
 
     @Autowired
     private IUserRepository userRepo;
+
+    @Autowired
+    private ISkillService skillServ;
 
     @Override
     public void saveProfile(Profile profile) {
@@ -39,6 +48,12 @@ public class ProfileService implements IProfileService {
     @Override
     public Profile getProfile(Long profileId) {
         return profileRepo.findById(profileId).orElse(null);
+    }
+
+    @Override
+    public Page<Profile> findBySkillsIn(List<Skill> skills, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return profileRepo.findByAllSkills(skills, pageRequest);
     }
 
     public void uploadImage(Long profileId, MultipartFile imageFile) {

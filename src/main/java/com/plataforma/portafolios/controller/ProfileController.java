@@ -1,28 +1,22 @@
 package com.plataforma.portafolios.controller;
 
 import com.plataforma.portafolios.model.Profile;
-import com.plataforma.portafolios.model.Project;
 import com.plataforma.portafolios.model.Skill;
-import com.plataforma.portafolios.model.User;
 import com.plataforma.portafolios.service.IProfileService;
-import com.plataforma.portafolios.service.IProjectService;
-import com.plataforma.portafolios.service.ISkillService;
 import com.plataforma.portafolios.service.IUserService;
-import jakarta.validation.Valid;
-import jakarta.validation.Validator;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -43,6 +37,11 @@ public class ProfileController {
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(profile.getImage());
+    }
+
+    @GetMapping("/get/employers")
+    public ResponseEntity<Page<Profile>> getEmployersBySkills(@RequestParam List<Skill> skills, @RequestParam(name = "page", defaultValue = "0") int page){
+        return ResponseEntity.ok(profileServ.findBySkillsIn(skills,page,10));
     }
 
     @PostMapping("/add/image")
@@ -96,6 +95,8 @@ public class ProfileController {
         }
         return ResponseEntity.badRequest().build();
     }
+
+
 
 
 

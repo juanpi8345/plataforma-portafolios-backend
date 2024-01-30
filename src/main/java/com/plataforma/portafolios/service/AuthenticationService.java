@@ -45,14 +45,13 @@ public class AuthenticationService {
             userToRegister.setUsername(user.getUsername());
             userToRegister.setEmail(user.getEmail());
             userToRegister.setPassword(passwordEncoder.encode(user.getPassword()));
-            if (user.getRole() == Role.EMPLOYEE) {
+            if (user.getRole() == Role.EMPLOYEE)
                 userToRegister.setRole(Role.EMPLOYEE);
-                Profile pr = new Profile();
-                pr.setName(user.getUsername());
-                userToRegister.setProfile(pr);
-            }
             else
                 userToRegister.setRole(Role.EMPLOYEER);
+            Profile pr = new Profile();
+            pr.setName(user.getUsername());
+            userToRegister.setProfile(pr);
             userRepository.save(userToRegister);
         }
         if(userToRegister!= null)
