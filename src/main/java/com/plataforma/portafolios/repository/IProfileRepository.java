@@ -16,8 +16,8 @@ import java.util.List;
 @Repository
 public interface IProfileRepository extends JpaRepository<Profile,Long> {
 
-    @Query("SELECT p FROM Profile p WHERE :skills MEMBER OF p.skills")
-    Page<Profile> findByAllSkills(@Param("skills") List<Skill> skills, Pageable pageable);
+    @Query("SELECT p FROM Profile p JOIN p.skills s WHERE s IN :skills")
+    Page<Profile> findBySkills(@Param("skills") List<Skill> skills, Pageable pageable);
 
 }
 

@@ -53,7 +53,7 @@ public class ProfileService implements IProfileService {
     @Override
     public Page<Profile> findBySkillsIn(List<Skill> skills, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return profileRepo.findByAllSkills(skills, pageRequest);
+        return profileRepo.findBySkills(skills, pageRequest);
     }
 
     public void uploadImage(Long profileId, MultipartFile imageFile) {

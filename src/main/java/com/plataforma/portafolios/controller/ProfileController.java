@@ -3,6 +3,7 @@ package com.plataforma.portafolios.controller;
 import com.plataforma.portafolios.model.Profile;
 import com.plataforma.portafolios.model.Skill;
 import com.plataforma.portafolios.service.IProfileService;
+import com.plataforma.portafolios.service.ISkillService;
 import com.plataforma.portafolios.service.IUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -29,6 +31,9 @@ public class ProfileController {
     @Autowired
     private IProfileService profileServ;
 
+    @Autowired
+    private ISkillService skillServ;
+
     @GetMapping("/get/image")
     public ResponseEntity<byte[]> getProfileImage(Principal principal) {
         Profile profile = userServ.getLogedUser(principal).getProfile();
@@ -40,7 +45,13 @@ public class ProfileController {
     }
 
     @GetMapping("/get/employers")
-    public ResponseEntity<Page<Profile>> getEmployersBySkills(@RequestParam List<Skill> skills, @RequestParam(name = "page", defaultValue = "0") int page){
+    public ResponseEntity<Page<Profile>> getEmployersBySkills(@RequestParam List<String> skillsStr, @RequestParam(name = "page", defaultValue = "0") int page){
+        List<Skill> skills = new ArrayList<Skill>();
+        for(String skill : skillsStr){
+            Skill skillFound = skillServ.getSkillByTitle(skill);
+            if(skillFound != null)
+                skills.add(skillFound);
+        }
         return ResponseEntity.ok(profileServ.findBySkillsIn(skills,page,10));
     }
 
