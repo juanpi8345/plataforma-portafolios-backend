@@ -1,9 +1,8 @@
 package com.plataforma.portafolios.repository;
 
 
-import com.plataforma.portafolios.model.Profile;
+import com.plataforma.portafolios.util.Profile;
 import com.plataforma.portafolios.model.Skill;
-import com.plataforma.portafolios.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

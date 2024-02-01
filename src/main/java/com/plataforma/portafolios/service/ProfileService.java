@@ -1,19 +1,15 @@
 package com.plataforma.portafolios.service;
 
-import com.plataforma.portafolios.model.Profile;
-import com.plataforma.portafolios.model.Project;
+import com.plataforma.portafolios.util.Profile;
 import com.plataforma.portafolios.model.Skill;
-import com.plataforma.portafolios.model.User;
 import com.plataforma.portafolios.repository.IProfileRepository;
 import com.plataforma.portafolios.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

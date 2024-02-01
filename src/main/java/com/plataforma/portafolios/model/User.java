@@ -1,6 +1,7 @@
 package com.plataforma.portafolios.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.plataforma.portafolios.util.Profile;
 import com.plataforma.portafolios.util.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

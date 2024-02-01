@@ -1,6 +1,6 @@
 package com.plataforma.portafolios.service;
 
-import com.plataforma.portafolios.model.Profile;
+import com.plataforma.portafolios.util.Profile;
 import com.plataforma.portafolios.model.Skill;
 import com.plataforma.portafolios.repository.IProfileRepository;
 import com.plataforma.portafolios.repository.ISkillRepository;

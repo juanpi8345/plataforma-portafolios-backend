@@ -1,6 +1,6 @@
 package com.plataforma.portafolios.controller;
 
-import com.plataforma.portafolios.model.Profile;
+import com.plataforma.portafolios.util.Profile;
 import com.plataforma.portafolios.model.Skill;
 import com.plataforma.portafolios.service.IProfileService;
 import com.plataforma.portafolios.service.ISkillService;
@@ -8,7 +8,6 @@ import com.plataforma.portafolios.service.IUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

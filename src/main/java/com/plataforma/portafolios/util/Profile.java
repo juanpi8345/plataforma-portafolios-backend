@@ -1,4 +1,4 @@
-package com.plataforma.portafolios.model;
+package com.plataforma.portafolios.util;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -11,12 +11,11 @@ import org.hibernate.validator.constraints.Length;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "profiles")
-public class Profile {
+@MappedSuperclass
+public abstract class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long profileId;
@@ -28,14 +27,4 @@ public class Profile {
     @Lob
     @Length(max = 1000)
     private String description;
-    private String occupations;
-    @OneToMany(mappedBy = "profile", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Project> projects = new ArrayList<>();
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "profile_skills",
-            joinColumns = @JoinColumn(name="profileId"),
-            inverseJoinColumns = @JoinColumn(name="skillId")
-    )
-    private List<Skill> skills = new ArrayList<>();
 }

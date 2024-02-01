@@ -3,7 +3,7 @@ package com.plataforma.portafolios.service;
 import com.plataforma.portafolios.dto.AuthenticationRequest;
 import com.plataforma.portafolios.dto.AuthenticationResponse;
 import com.plataforma.portafolios.dto.UserDTO;
-import com.plataforma.portafolios.model.Profile;
+import com.plataforma.portafolios.util.Profile;
 import com.plataforma.portafolios.model.User;
 import com.plataforma.portafolios.repository.IUserRepository;
 import com.plataforma.portafolios.util.Role;
@@ -13,9 +13,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class AuthenticationService {

@@ -1,6 +1,6 @@
 package com.plataforma.portafolios.controller;
 
-import com.plataforma.portafolios.model.Profile;
+import com.plataforma.portafolios.util.Profile;
 import com.plataforma.portafolios.model.Project;
 import com.plataforma.portafolios.service.IProfileService;
 import com.plataforma.portafolios.service.IProjectService;
