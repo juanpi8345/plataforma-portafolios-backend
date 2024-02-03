@@ -2,7 +2,6 @@ package com.plataforma.portafolios.service;
 
 import com.plataforma.portafolios.util.Profile;
 import com.plataforma.portafolios.model.Project;
-import com.plataforma.portafolios.repository.IProfileRepository;
 import com.plataforma.portafolios.repository.IProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

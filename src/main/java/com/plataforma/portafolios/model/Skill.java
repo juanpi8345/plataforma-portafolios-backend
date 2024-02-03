@@ -27,5 +27,8 @@ public class Skill {
     private String title;
     @JsonIgnore
     @ManyToMany(mappedBy = "skills")
-    private List<Profile> profiles = new ArrayList<>();
+    private List<Employee> employees = new ArrayList<>();
+    @JsonIgnore
+    @ManyToMany(mappedBy = "skillsSearched")
+    private List<Employer> employers = new ArrayList<>();
 }

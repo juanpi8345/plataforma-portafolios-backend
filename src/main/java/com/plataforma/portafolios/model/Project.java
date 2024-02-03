@@ -31,5 +31,5 @@ public class Project {
     @JsonIgnore
     @ManyToOne()
     @JoinColumn(name = "profileId")
-    private Profile profile;
+    private Employee employee;
 }

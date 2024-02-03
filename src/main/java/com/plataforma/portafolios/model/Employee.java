@@ -3,7 +3,9 @@ package com.plataforma.portafolios.model;
 import com.plataforma.portafolios.util.Profile;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter @Setter
 @Table(name = "employees")
 public class Employee extends Profile {
     // what are the employer searching
@@ -22,6 +25,6 @@ public class Employee extends Profile {
             inverseJoinColumns = @JoinColumn(name="skillId")
     )
     private List<Skill> skills = new ArrayList<>();
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "profile")
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "employee")
     private List<Project> projects = new ArrayList<Project>();
 }
