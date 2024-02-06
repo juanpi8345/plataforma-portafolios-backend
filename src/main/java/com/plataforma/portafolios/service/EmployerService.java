@@ -1,10 +1,8 @@
 package com.plataforma.portafolios.service;
 
-import com.plataforma.portafolios.model.Employee;
 import com.plataforma.portafolios.model.Employer;
 import com.plataforma.portafolios.model.Skill;
 import com.plataforma.portafolios.repository.IEmployerRepository;
-import com.plataforma.portafolios.util.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -46,7 +44,7 @@ public class EmployerService  implements  IEmployerService{
     @Override
     public Page<Employer> findBySkillsIn(List<Skill> skills, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return employerRepo.findBySkills(skills,pageable);
+        return employerRepo.findBySkillsSearched(skills,pageable);
     }
 
     @Override

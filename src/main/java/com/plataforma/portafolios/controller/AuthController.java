@@ -20,7 +20,6 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin("http://localhost:4200/")
-
 public class AuthController {
     @Autowired
     private AuthenticationService authService;

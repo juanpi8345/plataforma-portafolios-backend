@@ -2,7 +2,6 @@ package com.plataforma.portafolios.service;
 
 import com.plataforma.portafolios.model.Employee;
 import com.plataforma.portafolios.model.Skill;
-import com.plataforma.portafolios.util.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 

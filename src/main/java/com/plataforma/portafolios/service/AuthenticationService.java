@@ -3,7 +3,9 @@ package com.plataforma.portafolios.service;
 import com.plataforma.portafolios.dto.AuthenticationRequest;
 import com.plataforma.portafolios.dto.AuthenticationResponse;
 import com.plataforma.portafolios.dto.UserDTO;
-import com.plataforma.portafolios.util.Profile;
+import com.plataforma.portafolios.model.Employee;
+import com.plataforma.portafolios.model.Employer;
+import com.plataforma.portafolios.model.Profile;
 import com.plataforma.portafolios.model.User;
 import com.plataforma.portafolios.repository.IUserRepository;
 import com.plataforma.portafolios.util.Role;
@@ -42,13 +44,18 @@ public class AuthenticationService {
             userToRegister.setUsername(user.getUsername());
             userToRegister.setEmail(user.getEmail());
             userToRegister.setPassword(passwordEncoder.encode(user.getPassword()));
-            if (user.getRole() == Role.EMPLOYEE)
+            if (user.getRole() == Role.EMPLOYEE) {
                 userToRegister.setRole(Role.EMPLOYEE);
-            else
+                Employee emp = new Employee();
+                emp.setName(user.getUsername());
+                userToRegister.setProfile((Profile) emp);
+            }
+            else{
                 userToRegister.setRole(Role.EMPLOYEER);
-            Profile pr = new Profile();
-            pr.setName(user.getUsername());
-            userToRegister.setProfile(pr);
+                Employer emp = new Employer();
+                emp.setName(user.getUsername());
+                userToRegister.setProfile((Profile) emp);
+            }
             userRepository.save(userToRegister);
         }
         if(userToRegister!= null)

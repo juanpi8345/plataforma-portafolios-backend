@@ -1,6 +1,7 @@
 package com.plataforma.portafolios.service;
 
-import com.plataforma.portafolios.util.Profile;
+import com.plataforma.portafolios.model.Employee;
+import com.plataforma.portafolios.repository.IEmployeeRepository;
 import com.plataforma.portafolios.model.Project;
 import com.plataforma.portafolios.repository.IProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,17 +10,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProjectService implements IProjectService {
     @Autowired
-    private IProfileRepository profileRepo;
+    private IEmployeeRepository employeeRepo;
     @Autowired
     private IProjectRepository projectRepo;
+
     @Override
     public void saveProject(Project project, Long profileId) {
-        Profile profile = profileRepo.findById(profileId).orElse(null);
-        if(profile != null && project != null){
-            project.setProfile(profile);
+        Employee employee = employeeRepo.findById(profileId).orElse(null);
+        if(employee != null && project != null){
+            project.setEmployee(employee);
             projectRepo.save(project);
-            profile.getProjects().add(project);
-            profileRepo.save(profile);
+            employee.getProjects().add(project);
+            employeeRepo.save(employee);
         }
     }
 

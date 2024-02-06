@@ -1,4 +1,4 @@
-package com.plataforma.portafolios.util;
+package com.plataforma.portafolios.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -11,10 +11,11 @@ import org.hibernate.validator.constraints.Length;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@MappedSuperclass
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

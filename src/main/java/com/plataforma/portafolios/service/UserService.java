@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
-
 @Service
 public class UserService implements IUserService {
     @Autowired
@@ -42,7 +41,7 @@ public class UserService implements IUserService {
 
     @Override
     public User getLogedUser(Principal principal) {
-        User user=userRepo.findByUsername(principal.getName());
+        User user = userRepo.findByUsername(principal.getName());
         return user;
     }
 
