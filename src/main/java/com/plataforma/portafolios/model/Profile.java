@@ -28,4 +28,5 @@ public abstract class Profile {
     @Lob
     @Length(max = 1000)
     private String description;
+    private String occupations;
 }

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IEmployerService {
     void saveEmployer(Employer employer);
-    void editEmployer(Employer employer);
+
     Employer getEmployer(Long profileId);
 
     Page<Employer> findBySkillsIn(List<Skill> skills, int page, int size);

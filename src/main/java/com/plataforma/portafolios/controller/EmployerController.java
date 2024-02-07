@@ -39,8 +39,8 @@ public class EmployerController {
         Profile pr = userServ.getLogedUser(principal).getProfile();
         Skill sk = skillServ.getSkillByTitle(title);
         if(pr instanceof Employer em && sk != null) {
-            if(!em.getSkillsSearched().contains(sk)){
-                em.getSkillsSearched().add(sk);
+            if(!em.getSearchedSkills().contains(sk)){
+                em.getSearchedSkills().add(sk);
                 sk.getEmployers().add(em);
                 employerServ.saveEmployer(em);
             }
@@ -67,7 +67,7 @@ public class EmployerController {
         Profile profile = userServ.getLogedUser(principal).getProfile();
         Skill skill = skillServ.getSkill(skillId);
         if(profile instanceof Employer em && skill!=null){
-            em.getSkillsSearched().remove(skill);
+            em.getSearchedSkills().remove(skill);
             skill.getEmployers().remove(em);
             employerServ.saveEmployer(em);
             return ResponseEntity.ok().build();

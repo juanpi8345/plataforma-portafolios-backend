@@ -101,18 +101,6 @@ public class EmployeeController {
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/edit/occupation")
-    public ResponseEntity<?> editOccupation(Principal principal, @RequestParam String occupations){
-        Profile profile = userServ.getLogedUser(principal).getProfile();
-        if(profile != null){
-            Employee employee = (Employee) profile;
-            employee.setOccupations(occupations);
-            employeeServ.saveEmployee(employee);
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.badRequest().build();
-    }
-
     @DeleteMapping("/deleteProject/{projectId}")
     public ResponseEntity<?> deleteProject(@PathVariable Long projectId, Principal principal){
         Project project = projectServ.getProject(projectId);

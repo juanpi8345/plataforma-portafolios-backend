@@ -24,19 +24,6 @@ public class EmployerService  implements  IEmployerService{
     }
 
     @Override
-    public void editEmployer(Employer employer) {
-        Employer em = employerRepo.findById(employer.getProfileId()).orElse(null);
-        if(em != null){
-            em.setImage(employer.getImage());
-            em.setName(employer.getName());
-            em.setSkillsSearched(employer.getSkillsSearched());
-            em.setDescription(em.getDescription());
-            em.setSearching(em.getSearching());
-            employerRepo.save(employer);
-        }
-    }
-
-    @Override
     public Employer getEmployer(Long profileId) {
         return employerRepo.findById(profileId).orElse(null);
     }

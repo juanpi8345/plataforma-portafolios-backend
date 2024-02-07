@@ -24,5 +24,5 @@ public class Employer extends Profile {
             joinColumns = @JoinColumn(name="profileId"),
             inverseJoinColumns = @JoinColumn(name="skillId")
     )
-    private List<Skill> skillsSearched = new ArrayList<>();
+    private List<Skill> searchedSkills = new ArrayList<>();
 }

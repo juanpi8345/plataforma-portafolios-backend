@@ -15,8 +15,6 @@ import java.util.List;
 @Getter @Setter
 @Table(name = "employees")
 public class Employee extends Profile {
-    // what are the employer searching
-    private String occupations;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "employee_skills",

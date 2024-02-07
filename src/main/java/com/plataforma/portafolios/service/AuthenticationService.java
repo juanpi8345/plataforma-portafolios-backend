@@ -51,7 +51,7 @@ public class AuthenticationService {
                 userToRegister.setProfile((Profile) emp);
             }
             else{
-                userToRegister.setRole(Role.EMPLOYEER);
+                userToRegister.setRole(Role.EMPLOYER);
                 Employer emp = new Employer();
                 emp.setName(user.getUsername());
                 userToRegister.setProfile((Profile) emp);

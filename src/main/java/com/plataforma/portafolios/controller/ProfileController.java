@@ -33,6 +33,17 @@ public class ProfileController {
         return ResponseEntity.ok(profile.getImage());
     }
 
+    @PutMapping("/edit/occupation")
+    public ResponseEntity<?> editOccupation(Principal principal, @RequestParam String occupations){
+        Profile profile = userServ.getLogedUser(principal).getProfile();
+        if(profile != null){
+            profile.setOccupations(occupations);
+            profileServ.saveProfile(profile);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
     @PostMapping("/add/image")
     public ResponseEntity<?> uploadImage(Principal principal, @RequestParam MultipartFile image) throws IOException {
         Profile profile = userServ.getLogedUser(principal).getProfile();

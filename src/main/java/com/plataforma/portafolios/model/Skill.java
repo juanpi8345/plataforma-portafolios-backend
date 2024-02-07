@@ -28,6 +28,6 @@ public class Skill {
     @ManyToMany(mappedBy = "skills")
     private List<Employee> employees = new ArrayList<>();
     @JsonIgnore
-    @ManyToMany(mappedBy = "skillsSearched")
+    @ManyToMany(mappedBy = "searchedSkills")
     private List<Employer> employers = new ArrayList<>();
 }

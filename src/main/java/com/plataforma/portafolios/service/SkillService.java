@@ -39,7 +39,7 @@ public class SkillService implements ISkillService {
         else if(profile instanceof Employer employer && profile != null && existingSkill!=null){
             skill.getEmployers().add(employer);
             skillRepo.save(skill);
-            employer.getSkillsSearched().add(skill);
+            employer.getSearchedSkills().add(skill);
             employerRepo.save(employer);
         }
     }
