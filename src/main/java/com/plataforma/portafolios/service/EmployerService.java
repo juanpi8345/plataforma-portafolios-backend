@@ -31,7 +31,7 @@ public class EmployerService  implements  IEmployerService{
     @Override
     public Page<Employer> findBySkillsIn(List<Skill> skills, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return employerRepo.findBySkillsSearched(skills,pageable);
+        return employerRepo.findBySearchedSkills(skills,pageable);
     }
 
     @Override
