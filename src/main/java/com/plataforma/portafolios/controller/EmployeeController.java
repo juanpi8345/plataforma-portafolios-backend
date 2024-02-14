@@ -35,6 +35,7 @@ public class EmployeeController {
     @Autowired
     private IProjectService projectServ;
 
+    // this is to allow a employee to see al the employers with the skills they search
     @GetMapping("/get/employers")
     public ResponseEntity<Page<Employer>> getEmployersBySkills(@RequestParam List<String> skillsStr, @RequestParam(name = "page", defaultValue = "0") int page){
         List<Skill> skills = new ArrayList<Skill>();
@@ -44,6 +45,13 @@ public class EmployeeController {
                 skills.add(skillFound);
         }
         return ResponseEntity.ok(employerServ.findBySkillsIn(skills,page,10));
+    }
+
+
+    // this is to allow a employee to see a employer profile.
+    @GetMapping("/get/employer/{profileId}")
+    public ResponseEntity<Employer> getEmployer(@PathVariable Long profileId){
+        return ResponseEntity.ok(employerServ.getEmployer(profileId));
     }
 
     @GetMapping("/getProject/{projectId}")

@@ -34,6 +34,25 @@ public class EmployerController {
     @Autowired
     private ISkillService skillServ;
 
+    // this is to allow a employer  to see al the employees with the skills they search
+    @GetMapping("/get/employees")
+    public ResponseEntity<Page<Employee>> getEmployeesBySkills(@RequestParam List<String> skillsStr, @RequestParam(name = "page", defaultValue = "0") int page){
+        List<Skill> skills = new ArrayList<Skill>();
+        for(String skill : skillsStr){
+            Skill skillFound = skillServ.getSkillByTitle(skill);
+            if(skillFound != null)
+                skills.add(skillFound);
+        }
+        return ResponseEntity.ok(employeeServ.findBySkillsIn(skills,page,10));
+    }
+
+    // this is to allow a employee to see a employer profile.
+    @GetMapping("/get/employee/{profileId}")
+    public ResponseEntity<Employee> getEmployee(@PathVariable Long profileId){
+        return ResponseEntity.ok(employeeServ.getEmployee(profileId));
+    }
+
+
     @PostMapping("/add/searchedSkill")
     public ResponseEntity<Skill> addSearchedSkill(@Valid @RequestParam String title, Principal principal){
         Profile pr = userServ.getLogedUser(principal).getProfile();

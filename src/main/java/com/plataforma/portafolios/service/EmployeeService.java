@@ -6,6 +6,8 @@ import com.plataforma.portafolios.repository.IEmployeeRepository;
 import com.plataforma.portafolios.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,7 +48,9 @@ public class EmployeeService implements  IEmployeeService{
 
     @Override
     public Page<Employee> findBySkillsIn(List<Skill> skills, int page, int size) {
-       return null;
+
+        Pageable pageable = PageRequest.of(page, size);
+        return employeeRepo.findBySkills(skills,pageable);
     }
 
     public void uploadImage(Long profileId, MultipartFile imageFile) {
