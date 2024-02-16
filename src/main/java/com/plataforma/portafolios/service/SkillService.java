@@ -11,6 +11,7 @@ import com.plataforma.portafolios.repository.ISkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -61,7 +62,10 @@ public class SkillService implements ISkillService {
 
     @Override
     public List<Skill> getAll() {
-        return skillRepo.findAll();
+        List<Skill> skills = skillRepo.findAll();
+        skills.sort((s1, s2) -> s1.getTitle().compareToIgnoreCase(s2.getTitle()));
+        return skills;
+
     }
 
     @Override
