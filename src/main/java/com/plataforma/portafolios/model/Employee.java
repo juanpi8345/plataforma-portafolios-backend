@@ -15,13 +15,14 @@ import java.util.List;
 @Getter @Setter
 @Table(name = "employees")
 public class Employee extends Profile {
-    @ManyToMany(cascade = CascadeType.ALL)
+
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinTable(
             name = "employee_skills",
             joinColumns = @JoinColumn(name="profileId"),
             inverseJoinColumns = @JoinColumn(name="skillId")
     )
     private List<Skill> skills = new ArrayList<>();
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "employee")
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "employee",fetch = FetchType.EAGER)
     private List<Project> projects = new ArrayList<Project>();
 }

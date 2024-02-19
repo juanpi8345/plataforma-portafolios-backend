@@ -42,6 +42,8 @@ public class User implements UserDetails {
      private Profile profile;
 
 
+
+
      @Override
      public Collection<? extends GrantedAuthority> getAuthorities() {
           List<GrantedAuthority> authorities = new ArrayList<>();

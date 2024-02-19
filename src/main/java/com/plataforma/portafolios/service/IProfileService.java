@@ -11,4 +11,6 @@ public interface IProfileService {
 
     void saveProfile(Profile profile);
     void uploadImage(Long profileId, MultipartFile imageFile);
+
+    Profile getProfile(Long profileId);
 }

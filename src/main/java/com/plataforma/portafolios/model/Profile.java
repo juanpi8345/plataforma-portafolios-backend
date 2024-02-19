@@ -1,5 +1,6 @@
 package com.plataforma.portafolios.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -29,4 +30,7 @@ public abstract class Profile {
     @Length(max = 1000)
     private String description;
     private String occupations;
+    @JsonIgnore
+    @OneToMany()
+    private List<Chat> chats;
 }

@@ -20,4 +20,9 @@ public class ProfileService implements IProfileService{
     public void uploadImage(Long profileId, MultipartFile imageFile) {
 
     }
+
+    @Override
+    public Profile getProfile(Long profileId) {
+        return profileRepo.findById(profileId).orElse(null);
+    }
 }

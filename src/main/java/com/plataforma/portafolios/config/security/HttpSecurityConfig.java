@@ -32,6 +32,8 @@ public class HttpSecurityConfig {
                 .authorizeHttpRequests(authConfig ->{
                    authConfig.requestMatchers(HttpMethod.POST,"/auth/register").permitAll();
                    authConfig.requestMatchers(HttpMethod.POST,"/auth/login").permitAll();
+                    authConfig.requestMatchers("/chat-socket/**").permitAll();
+
                    authConfig.anyRequest().authenticated();
                 });
 
