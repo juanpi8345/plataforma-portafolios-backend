@@ -15,15 +15,16 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Chat {
-    //IMPORTANT
-    //chat with firstUsername and secondUsername is different to a chat with secondUsername and firstUsername
-    //example: chatId: 1, firstUsername: Juan, secondUsername: Pedro NOT EQUAL firstUsername: Pedro, secondUsername: Juan
-    //it is for finding easier the profile 's chats
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int chatId;
-    private String firstUsername;
-    private String secondUsername;
+    @ManyToOne()
+    @JoinColumn(name = "profile1_id")
+    //Profile who init chat
+    private Profile profile1;
+    @ManyToOne()
+    @JoinColumn(name = "profile2_id")
+    private Profile profile2;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Message> messageList = new ArrayList<>();

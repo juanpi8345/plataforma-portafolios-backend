@@ -31,7 +31,7 @@ public class WebSocketController {
         Profile receiver = profileServ.getProfile(message.getReceiverProfileId());
         Message newMessage = null;
         if(sender != null && receiver != null){
-            newMessage = new Message(null, LocalDateTime.now(),sender,receiver,message.getContent());
+            newMessage = new Message(null, LocalDateTime.now(),sender,receiver,message.getContent(),null);
             chatService.saveChat(newMessage,sender,receiver);
         }
         return newMessage;

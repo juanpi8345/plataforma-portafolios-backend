@@ -27,6 +27,9 @@ public class Message {
     private Profile receiver;
     @Column(columnDefinition = "TEXT")
     private String content;
+    @ManyToOne()
+    @JoinColumn(name = "chat_id")
+    private Chat chat;
 
 
 }

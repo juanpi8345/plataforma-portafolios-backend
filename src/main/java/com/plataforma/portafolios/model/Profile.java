@@ -30,7 +30,4 @@ public abstract class Profile {
     @Length(max = 1000)
     private String description;
     private String occupations;
-    @JsonIgnore
-    @OneToMany()
-    private List<Chat> chats;
 }
