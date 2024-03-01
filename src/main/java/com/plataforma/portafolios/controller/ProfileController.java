@@ -25,6 +25,11 @@ public class ProfileController {
     @Autowired
     private IProfileService profileServ;
 
+    @GetMapping("/get/{profileId}")
+    public ResponseEntity<Profile> getProfile(@PathVariable Long profileId){
+        return ResponseEntity.ok(profileServ.getProfile(profileId));
+    }
+
     @GetMapping("/get/image")
     public ResponseEntity<byte[]> getProfileImage(Principal principal) {
         Profile profile = userServ.getLogedUser(principal).getProfile();

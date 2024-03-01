@@ -1,3 +1,5 @@
+
+
 insert into skills values
 	('',"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Typescript_logo_2020.svg/2048px-Typescript_logo_2020.svg.png","Typescript"),
     ('',"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Database-mysql.svg/640px-Database-mysql.svg.png","MySQL"),

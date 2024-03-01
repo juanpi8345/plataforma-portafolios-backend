@@ -1,5 +1,6 @@
 package com.plataforma.portafolios.service;
 
+import com.plataforma.portafolios.dto.MessageDTO;
 import com.plataforma.portafolios.model.Message;
 
 import java.util.List;

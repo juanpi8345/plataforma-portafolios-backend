@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 
 public interface IProfileService {
 
@@ -13,4 +14,9 @@ public interface IProfileService {
     void uploadImage(Long profileId, MultipartFile imageFile);
 
     Profile getProfile(Long profileId);
+
+    //this method will return recommended users, like employees or employers
+    //E will be employers or employees
+    //skills could be employees' skills or searched skills in case of employers
+    <E> List<E> getRecommendedProfiles(Profile profile);
 }
