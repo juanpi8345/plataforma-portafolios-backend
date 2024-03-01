@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/profile/")
@@ -36,6 +37,16 @@ public class ProfileController {
         if (profile == null || profile.getImage() == null)
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(profile.getImage());
+    }
+
+
+    @GetMapping("/get/recommended")
+    public <E> ResponseEntity<List<E>> getRecommendedProfiles(Principal principal){
+        Profile profile = userServ.getLogedUser(principal).getProfile();
+        if (profile != null)
+            return ResponseEntity.ok(profileServ.getRecommendedProfiles(profile));
+        return ResponseEntity.badRequest().build();
+
     }
 
     @PutMapping("/edit/occupation")
