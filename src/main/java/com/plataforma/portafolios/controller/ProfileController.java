@@ -61,20 +61,14 @@ public class ProfileController {
     }
 
     @PostMapping("/add/image")
-    public ResponseEntity<?> uploadImage(Principal principal, @RequestParam MultipartFile image) throws IOException {
+    public ResponseEntity<?> uploadImage(Principal principal, @RequestParam MultipartFile file) throws IOException {
         Profile profile = userServ.getLogedUser(principal).getProfile();
         if (profile == null)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró el perfil asociado al usuario.");
-        if (image.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if (file.isEmpty())
             return ResponseEntity.badRequest().body("La imagen está vacía.");
 
-        String contentType = image.getContentType();
-        if (contentType == null || !contentType.startsWith("image")) {
-            return ResponseEntity.badRequest().body("El archivo no es una imagen válida.");
-        }
-        profile.setImage(image.getBytes());
-        profileServ.saveProfile(profile);
-
+        profileServ.uploadImage(profile.getProfileId(),file);
         return ResponseEntity.ok().build();
     }
 
