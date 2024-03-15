@@ -24,10 +24,10 @@ public class EmployeeController {
     @Autowired
     private IUserService userServ;
     @Autowired
-    private IEmployeeService employeeServ;
+    private EmployeeService employeeServ;
 
     @Autowired
-    private IEmployerService employerServ;
+    private EmployerService employerServ;
 
     @Autowired
     private ISkillService skillServ;
@@ -54,7 +54,7 @@ public class EmployeeController {
     // this is to allow a employee to see a employer profile.
     @GetMapping("/get/employer/{profileId}")
     public ResponseEntity<Employer> getEmployer(@PathVariable Long profileId){
-        return ResponseEntity.ok((Employer) profileServ.getProfile(profileId));
+        return ResponseEntity.ok((Employer) profileServ.getEntity(profileId));
     }
 
     @GetMapping("/getProject/{projectId}")
@@ -75,7 +75,7 @@ public class EmployeeController {
             if(!em.getSkills().contains(sk)){
                 em.getSkills().add(sk);
                 sk.getEmployees().add(em);
-                profileServ.saveProfile(em);
+                profileServ.saveEntity(em);
             }
             return ResponseEntity.ok(sk);
         }
@@ -89,7 +89,7 @@ public class EmployeeController {
             Employee employee = (Employee) profile;
             employee.getProjects().add(project);
             project.setEmployee(employee);
-            profileServ.saveProfile(employee);
+            profileServ.saveEntity(employee);
             return ResponseEntity.ok(project);
         }
         return ResponseEntity.notFound().build();
@@ -106,7 +106,7 @@ public class EmployeeController {
             project.setEnd(projectRequest.getEnd());
             project.setDescription(projectRequest.getDescription());
             project.setImage(projectRequest.getImage());
-            profileServ.saveProfile(employee);
+            profileServ.saveEntity(employee);
             return ResponseEntity.ok(project);
         }
         return ResponseEntity.notFound().build();
@@ -120,7 +120,7 @@ public class EmployeeController {
             Employee employee = (Employee)profile;
             employee.getProjects().remove(project);
             projectServ.deleteProject(projectId);
-            profileServ.saveProfile(employee);
+            profileServ.saveEntity(employee);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
@@ -133,7 +133,7 @@ public class EmployeeController {
         if(profile instanceof Employee em && skill!=null){
             em.getSkills().remove(skill);
             skill.getEmployees().remove(em);
-            profileServ.saveProfile(em);
+            profileServ.saveEntity(em);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();

@@ -8,6 +8,7 @@ import com.plataforma.portafolios.repository.IEmployeeRepository;
 import com.plataforma.portafolios.repository.IEmployerRepository;
 import com.plataforma.portafolios.repository.IProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -33,15 +34,6 @@ public class ProfileService implements IProfileService{
     @Autowired
     private IEmployeeRepository employeeRepo;
 
-    @Override
-    public void saveProfile(Profile profile) {
-        profileRepo.save(profile);
-    }
-
-    @Override
-    public Profile getProfile(Long profileId) {
-        return profileRepo.findById(profileId).orElse(null);
-    }
 
     //skills could be employees' skills or searched skills in case of employers
     @Override
@@ -64,10 +56,23 @@ public class ProfileService implements IProfileService{
         return profileList;
     }
 
+
+
     @Override
     public void uploadImage(Long profileId, MultipartFile imageFile) throws IOException {
         Profile profile = profileRepo.findById(profileId).orElse(null);
         profile.setImage(imageFile.getBytes());
         profileRepo.save(profile);
+    }
+
+    @Override
+    public Profile getEntity(Long id) {
+        return profileRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public void saveEntity(Profile profile) {
+        if(profile != null)
+            profileRepo.save(profile);
     }
 }

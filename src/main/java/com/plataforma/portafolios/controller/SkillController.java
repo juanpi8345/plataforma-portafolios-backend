@@ -20,17 +20,9 @@ import java.util.List;
 @CrossOrigin("http://localhost:4200/")
 public class SkillController {
     @Autowired
-    private IEmployeeService employeeServ;
-
-    @Autowired
-    private IEmployerService employerServ;
-    @Autowired
     private ISkillService skillServ;
-
     @Autowired
     private IUserService userServ;
-
-
     @GetMapping("/getAll")
     public ResponseEntity<List<Skill>> getAllSkills(Principal principal){
         Profile profile = userServ.getLogedUser(principal).getProfile();

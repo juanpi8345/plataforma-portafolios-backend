@@ -28,7 +28,7 @@ public class ProfileController {
 
     @GetMapping("/get/{profileId}")
     public ResponseEntity<Profile> getProfile(@PathVariable Long profileId){
-        return ResponseEntity.ok(profileServ.getProfile(profileId));
+        return ResponseEntity.ok(profileServ.getEntity(profileId));
     }
 
     @GetMapping("/get/image")
@@ -41,7 +41,7 @@ public class ProfileController {
 
     @GetMapping("/{profileId}/get/image")
     public ResponseEntity<byte[]> getProfileImage(@PathVariable Long profileId) {
-        Profile profile = profileServ.getProfile(profileId);
+        Profile profile = profileServ.getEntity(profileId);
         if (profile == null || profile.getImage() == null)
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(profile.getImage());
@@ -62,7 +62,7 @@ public class ProfileController {
         Profile profile = userServ.getLogedUser(principal).getProfile();
         if(profile != null){
             profile.setOccupations(occupations);
-            profileServ.saveProfile(profile);
+            profileServ.saveEntity(profile);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
@@ -85,7 +85,7 @@ public class ProfileController {
         Profile profile = userServ.getLogedUser(principal).getProfile();
         if(profile != null){
             profile.setName(name);
-            profileServ.saveProfile(profile);
+            profileServ.saveEntity(profile);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
@@ -96,7 +96,7 @@ public class ProfileController {
         Profile profile = userServ.getLogedUser(principal).getProfile();
         if(profile != null){
             profile.setDescription(description);
-            profileServ.saveProfile(profile);
+            profileServ.saveEntity(profile);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
