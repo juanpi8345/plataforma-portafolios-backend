@@ -24,29 +24,7 @@ public class UserService implements IUserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public void saveUser(User user) {
-        userRepo.save(user);
-    }
-
-    @Override
-    public User getUserById(Long id) {
-        return userRepo.findById(id).orElse(null);
-    }
-
-
-    @Override
-    public User getUser(String username) {
-        return userRepo.findByUsername(username);
-    }
-
-    @Override
     public User getLogedUser(Principal principal) {
-        User user = userRepo.findByUsername(principal.getName());
-        return user;
-    }
-
-    @Override
-    public User getUserByEmail(String email) {
-        return userRepo.findByEmail(email);
+        return userRepo.findByUsername(principal.getName());
     }
 }

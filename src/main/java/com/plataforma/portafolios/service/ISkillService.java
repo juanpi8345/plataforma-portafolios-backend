@@ -1,20 +1,13 @@
 package com.plataforma.portafolios.service;
 
 import com.plataforma.portafolios.model.Skill;
+import com.plataforma.portafolios.util.IGenericCrud;
 
 import java.util.List;
 
-public interface ISkillService {
-
-    void saveSkill(Skill skill, Long profileId);
-    void deleteSkill(Long skillId);
+public interface ISkillService extends IGenericCrud<Skill,Long> {
 
     List<Skill> getSkillContaining(String query);
-
-    Skill getSkill(Long skillId);
-
     List<Skill> getAll();
-
     Skill getSkillByTitle(String title);
-    void editSkill(Skill skillRequest);
 }

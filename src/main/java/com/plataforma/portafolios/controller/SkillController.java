@@ -31,25 +31,4 @@ public class SkillController {
         return ResponseEntity.notFound().build();
     }
 
-    /*
-    @GetMapping("/get")
-    public ResponseEntity<List<Skill>> getProfileSkills(Principal principal){
-        Profile profile = userServ.getLogedUser(principal).getProfile();
-        if(profile instanceof Employee employee)
-            return ResponseEntity.ok(employee.getSkills());
-        else if(profile instanceof Employer employer)
-            return ResponseEntity.ok(employer.getSkillsSearched());
-        return ResponseEntity.notFound().build();
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<Skill>> searchSkills(Principal principal, @RequestParam String query){
-        Profile profile = userServ.getLogedUser(principal).getProfile();
-        if(profile != null)
-            return ResponseEntity.ok(skillServ.getSkillContaining(query));
-        return ResponseEntity.notFound().build();
-    }*/
-
-
-
 }

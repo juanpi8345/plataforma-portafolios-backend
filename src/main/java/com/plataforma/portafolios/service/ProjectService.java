@@ -9,8 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProjectService implements IProjectService {
-    @Autowired
-    private IEmployeeRepository employeeRepo;
+
     @Autowired
     private IProjectRepository projectRepo;
 

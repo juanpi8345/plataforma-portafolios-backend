@@ -124,7 +124,7 @@ public class EmployeeController {
     @DeleteMapping("/deleteSkill/{skillId}")
     public ResponseEntity<?> deleteSkill(@PathVariable Long skillId, Principal principal){
         Profile profile = userServ.getLogedUser(principal).getProfile();
-        Skill skill = skillServ.getSkill(skillId);
+        Skill skill = skillServ.getEntity(skillId);
         if(profile instanceof Employee em && skill!=null){
             em.getSkills().remove(skill);
             skill.getEmployees().remove(em);
