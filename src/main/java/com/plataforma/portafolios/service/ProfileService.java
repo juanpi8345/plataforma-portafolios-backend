@@ -56,8 +56,6 @@ public class ProfileService implements IProfileService{
         return profileList;
     }
 
-
-
     @Override
     public void uploadImage(Long profileId, MultipartFile imageFile) throws IOException {
         Profile profile = profileRepo.findById(profileId).orElse(null);
@@ -74,5 +72,15 @@ public class ProfileService implements IProfileService{
     public void saveEntity(Profile profile) {
         if(profile != null)
             profileRepo.save(profile);
+    }
+
+    @Override
+    public void deleteEntity(Long id) {
+        profileRepo.deleteById(id);
+    }
+
+    @Override
+    public void editEntity(Profile profile) {
+
     }
 }

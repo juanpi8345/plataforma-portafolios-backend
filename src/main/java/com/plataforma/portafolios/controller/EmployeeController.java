@@ -60,7 +60,7 @@ public class EmployeeController {
     @GetMapping("/getProject/{projectId}")
     public ResponseEntity<Project> getUserProject(@PathVariable Long projectId, Principal principal){
         Profile profile = userServ.getLogedUser(principal).getProfile();
-        Project project = projectServ.getProject(projectId);
+        Project project = projectServ.getEntity(projectId);
         if(profile!=null && project != null){
             return ResponseEntity.ok(project);
         }
@@ -85,11 +85,12 @@ public class EmployeeController {
     @PostMapping("/addProject")
     public ResponseEntity<Project> addProject(@Valid @RequestBody Project project,Principal principal){
         Profile profile = userServ.getLogedUser(principal).getProfile();
-        if(profile!=null){
+        if(profile!=null && project != null){
             Employee employee = (Employee) profile;
             employee.getProjects().add(project);
             project.setEmployee(employee);
             profileServ.saveEntity(employee);
+            projectServ.saveEntity(project);
             return ResponseEntity.ok(project);
         }
         return ResponseEntity.notFound().build();
@@ -97,16 +98,10 @@ public class EmployeeController {
 
     @PutMapping("/editProject")
     public ResponseEntity<Project> editProject(@RequestBody Project projectRequest, Principal principal) {
-        Project project = projectServ.getProject(projectRequest.getProjectId());
+        Project project = projectServ.getEntity(projectRequest.getProjectId());
         Profile profile = userServ.getLogedUser(principal).getProfile();
         if(project!= null && profile != null){
-            Employee employee = (Employee) profile;
-            project.setName(projectRequest.getName());
-            project.setStart(projectRequest.getStart());
-            project.setEnd(projectRequest.getEnd());
-            project.setDescription(projectRequest.getDescription());
-            project.setImage(projectRequest.getImage());
-            profileServ.saveEntity(employee);
+            projectServ.editEntity(project);
             return ResponseEntity.ok(project);
         }
         return ResponseEntity.notFound().build();
@@ -114,12 +109,12 @@ public class EmployeeController {
 
     @DeleteMapping("/deleteProject/{projectId}")
     public ResponseEntity<?> deleteProject(@PathVariable Long projectId, Principal principal){
-        Project project = projectServ.getProject(projectId);
+        Project project = projectServ.getEntity(projectId);
         Profile profile = userServ.getLogedUser(principal).getProfile();
         if(project != null && profile!=null){
             Employee employee = (Employee)profile;
             employee.getProjects().remove(project);
-            projectServ.deleteProject(projectId);
+            projectServ.deleteEntity(projectId);
             profileServ.saveEntity(employee);
             return ResponseEntity.ok().build();
         }
