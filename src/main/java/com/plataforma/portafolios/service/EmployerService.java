@@ -19,16 +19,6 @@ public class EmployerService  implements  IEmployerService{
     private IEmployerRepository employerRepo;
 
     @Override
-    public void saveEmployer(Employer employer) {
-        employerRepo.save(employer);
-    }
-
-    @Override
-    public Employer getEmployer(Long profileId) {
-        return employerRepo.findById(profileId).orElse(null);
-    }
-
-    @Override
     public Page<Employer> findBySkillsIn(List<Skill> skills, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return employerRepo.findBySearchedSkills(skills,pageable);

@@ -8,11 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface IEmployeeService {
-
-    void saveEmployee(Employee employee);
-    void editEmployee(Employee employee);
-    Employee getEmployee(Long profileId);
-
     Page<Employee> findBySkillsIn(List<Skill> skills, int page, int size);
 
 }

@@ -18,37 +18,8 @@ public class EmployeeService implements  IEmployeeService{
     @Autowired
     private IEmployeeRepository employeeRepo;
 
-    @Autowired
-    private IUserRepository userRepo;
-
-    @Autowired
-    private ISkillService skillServ;
-
-    @Override
-    public void saveEmployee(Employee employee) {
-        employeeRepo.save(employee);
-    }
-
-    @Override
-    public void editEmployee(Employee employee) {
-        Employee em = employeeRepo.findById(employee.getProfileId()).orElse(null);
-        if(em != null){
-            em.setImage(employee.getImage());
-            em.setName(employee.getName());
-            em.setSkills(employee.getSkills());
-            em.setProjects(employee.getProjects());
-            employeeRepo.save(employee);
-        }
-    }
-
-    @Override
-    public Employee getEmployee(Long profileId) {
-        return employeeRepo.findById(profileId).orElse(null);
-    }
-
     @Override
     public Page<Employee> findBySkillsIn(List<Skill> skills, int page, int size) {
-
         Pageable pageable = PageRequest.of(page, size);
         return employeeRepo.findBySkills(skills,pageable);
     }

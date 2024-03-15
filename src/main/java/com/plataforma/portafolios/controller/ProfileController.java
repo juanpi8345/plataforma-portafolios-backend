@@ -16,7 +16,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/profile/")
+@RequestMapping("/profile")
 @CrossOrigin("http://localhost:4200/")
 @Valid
 public class ProfileController {
@@ -32,8 +32,16 @@ public class ProfileController {
     }
 
     @GetMapping("/get/image")
-    public ResponseEntity<byte[]> getProfileImage(Principal principal) {
+    public ResponseEntity<byte[]> getImage(Principal principal) {
         Profile profile = userServ.getLogedUser(principal).getProfile();
+        if (profile == null || profile.getImage() == null)
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(profile.getImage());
+    }
+
+    @GetMapping("/{profileId}/get/image")
+    public ResponseEntity<byte[]> getProfileImage(@PathVariable Long profileId) {
+        Profile profile = profileServ.getProfile(profileId);
         if (profile == null || profile.getImage() == null)
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(profile.getImage());
