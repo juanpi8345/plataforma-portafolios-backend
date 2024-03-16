@@ -10,9 +10,12 @@ import com.plataforma.portafolios.repository.IProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -33,11 +36,6 @@ public class ProfileService implements IProfileService{
     @Override
     public void saveProfile(Profile profile) {
         profileRepo.save(profile);
-    }
-
-    @Override
-    public void uploadImage(Long profileId, MultipartFile imageFile) {
-
     }
 
     @Override
@@ -64,5 +62,12 @@ public class ProfileService implements IProfileService{
                             ,employee.getSkills().get(random.nextInt(skillsSize)),employee.getSkills().get(random.nextInt(skillsSize)));
         }
         return profileList;
+    }
+
+    @Override
+    public void uploadImage(Long profileId, MultipartFile imageFile) throws IOException {
+        Profile profile = profileRepo.findById(profileId).orElse(null);
+        profile.setImage(imageFile.getBytes());
+        profileRepo.save(profile);
     }
 }

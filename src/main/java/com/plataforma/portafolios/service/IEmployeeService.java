@@ -14,6 +14,5 @@ public interface IEmployeeService {
     Employee getEmployee(Long profileId);
 
     Page<Employee> findBySkillsIn(List<Skill> skills, int page, int size);
-    void uploadImage(Long profileId, MultipartFile imageFile);
 
 }

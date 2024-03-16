@@ -15,6 +15,7 @@ public interface IEmployerRepository extends JpaRepository<Employer,Long> {
     @Query("SELECT e FROM Employer e JOIN e.searchedSkills s WHERE s IN :skills")
     Page<Employer> findBySearchedSkills(@Param("skills") List<Skill> skills, Pageable pageable);
 
-    @Query("SELECT e FROM Employer e WHERE :skill1 MEMBER OF e.skills OR :skill2 MEMBER OF e.skills OR :skill3 MEMBER OF e.skills")
+    @Query("SELECT e FROM Employer e WHERE :skill1 MEMBER OF e.searchedSkills OR :skill2 MEMBER OF e.searchedSkills OR :skill3 MEMBER OF " +
+            "e.searchedSkills")
     List<Employer> findBySkills(@Param("skill1") Skill skill1, @Param("skill2") Skill skill2, @Param("skill3") Skill skill3);
 }

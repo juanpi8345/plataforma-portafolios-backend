@@ -53,16 +53,5 @@ public class EmployeeService implements  IEmployeeService{
         return employeeRepo.findBySkills(skills,pageable);
     }
 
-    public void uploadImage(Long profileId, MultipartFile imageFile) {
-        Employee employee = employeeRepo.findById(profileId).orElse(null);
-        if (employee != null) {
-            try {
-                byte[] imageData = imageFile.getBytes();
-                employee.setImage(imageData);
-                employeeRepo.save(employee);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+
 }

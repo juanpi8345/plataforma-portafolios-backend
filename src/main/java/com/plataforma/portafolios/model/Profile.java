@@ -25,6 +25,7 @@ public abstract class Profile {
     private String name;
     @Lob
     @Column(name = "image", columnDefinition="MEDIUMBLOB")
+    @JsonIgnore
     private byte[] image;
     @Lob
     @Length(max = 1000)

@@ -34,17 +34,5 @@ public class EmployerService  implements  IEmployerService{
         return employerRepo.findBySearchedSkills(skills,pageable);
     }
 
-    @Override
-    public void uploadImage(Long profileId, MultipartFile imageFile) {
-        Employer employer = employerRepo.findById(profileId).orElse(null);
-        if (employer != null) {
-            try {
-                byte[] imageData = imageFile.getBytes();
-                employer.setImage(imageData);
-                employerRepo.save(employer);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+
 }

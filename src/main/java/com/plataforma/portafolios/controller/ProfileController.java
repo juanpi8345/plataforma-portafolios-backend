@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/profile/")
@@ -38,6 +39,16 @@ public class ProfileController {
         return ResponseEntity.ok(profile.getImage());
     }
 
+
+    @GetMapping("/get/recommended")
+    public <E> ResponseEntity<List<E>> getRecommendedProfiles(Principal principal){
+        Profile profile = userServ.getLogedUser(principal).getProfile();
+        if (profile != null)
+            return ResponseEntity.ok(profileServ.getRecommendedProfiles(profile));
+        return ResponseEntity.badRequest().build();
+
+    }
+
     @PutMapping("/edit/occupation")
     public ResponseEntity<?> editOccupation(Principal principal, @RequestParam String occupations){
         Profile profile = userServ.getLogedUser(principal).getProfile();
@@ -50,20 +61,14 @@ public class ProfileController {
     }
 
     @PostMapping("/add/image")
-    public ResponseEntity<?> uploadImage(Principal principal, @RequestParam MultipartFile image) throws IOException {
+    public ResponseEntity<?> uploadImage(Principal principal, @RequestParam MultipartFile file) throws IOException {
         Profile profile = userServ.getLogedUser(principal).getProfile();
         if (profile == null)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró el perfil asociado al usuario.");
-        if (image.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if (file.isEmpty())
             return ResponseEntity.badRequest().body("La imagen está vacía.");
 
-        String contentType = image.getContentType();
-        if (contentType == null || !contentType.startsWith("image")) {
-            return ResponseEntity.badRequest().body("El archivo no es una imagen válida.");
-        }
-        profile.setImage(image.getBytes());
-        profileServ.saveProfile(profile);
-
+        profileServ.uploadImage(profile.getProfileId(),file);
         return ResponseEntity.ok().build();
     }
 
