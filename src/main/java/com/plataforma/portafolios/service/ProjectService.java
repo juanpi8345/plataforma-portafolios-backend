@@ -9,34 +9,29 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProjectService implements IProjectService {
-    @Autowired
-    private IEmployeeRepository employeeRepo;
+
     @Autowired
     private IProjectRepository projectRepo;
 
     @Override
-    public void saveProject(Project project, Long profileId) {
-        Employee employee = employeeRepo.findById(profileId).orElse(null);
-        if(employee != null && project != null){
-            project.setEmployee(employee);
-            projectRepo.save(project);
-            employee.getProjects().add(project);
-            employeeRepo.save(employee);
-        }
-    }
-
-    @Override
-    public void deleteProject(Long projectId) {
-        projectRepo.deleteById(projectId);
-    }
-
-    @Override
-    public Project getProject(Long projectId) {
+    public Project getEntity(Long projectId) {
         return projectRepo.findById(projectId).orElse(null);
     }
 
     @Override
-    public void editProject(Project project) {
+    public void saveEntity(Project project) {
+        if(project != null){
+            projectRepo.save(project);
+        }
+    }
+
+    @Override
+    public void deleteEntity(Long projectId) {
+        projectRepo.deleteById(projectId);
+    }
+
+    @Override
+    public void editEntity(Project project) {
         Project pr = projectRepo.findById(project.getProjectId()).orElse(null);
         if(pr != null){
             pr.setName(project.getName());

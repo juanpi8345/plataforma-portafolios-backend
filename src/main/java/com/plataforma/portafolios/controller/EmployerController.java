@@ -26,10 +26,12 @@ public class EmployerController {
     @Autowired
     private IUserService userServ;
     @Autowired
-    private IEmployeeService employeeServ;
+    private EmployeeService employeeServ;
+    @Autowired
+    private EmployerService employerServ;
 
     @Autowired
-    private IEmployerService employerServ;
+    private IProfileService profileServ;
 
     @Autowired
     private ISkillService skillServ;
@@ -49,7 +51,7 @@ public class EmployerController {
     // this is to allow a employee to see a employer profile.
     @GetMapping("/get/employee/{profileId}")
     public ResponseEntity<Employee> getEmployee(@PathVariable Long profileId){
-        return ResponseEntity.ok(employeeServ.getEmployee(profileId));
+        return ResponseEntity.ok((Employee) profileServ.getEntity(profileId));
     }
 
 
@@ -61,7 +63,7 @@ public class EmployerController {
             if(!em.getSearchedSkills().contains(sk)){
                 em.getSearchedSkills().add(sk);
                 sk.getEmployers().add(em);
-                employerServ.saveEmployer(em);
+                profileServ.saveEntity(em);
             }
             return ResponseEntity.ok(sk);
         }
@@ -74,7 +76,7 @@ public class EmployerController {
         if(profile!=null){
             Employer emp = (Employer) profile;
             emp.setSearching(newSearching);
-            employerServ.saveEmployer(emp);
+            profileServ.saveEntity(emp);
             return ResponseEntity.ok(emp);
          }
         return ResponseEntity.notFound().build();
@@ -84,11 +86,11 @@ public class EmployerController {
     @DeleteMapping("/deleteSkill/{skillId}")
     public ResponseEntity<?> deleteSearchedSkill(@PathVariable Long skillId, Principal principal){
         Profile profile = userServ.getLogedUser(principal).getProfile();
-        Skill skill = skillServ.getSkill(skillId);
+        Skill skill = skillServ.getEntity(skillId);
         if(profile instanceof Employer em && skill!=null){
             em.getSearchedSkills().remove(skill);
             skill.getEmployers().remove(em);
-            employerServ.saveEmployer(em);
+            profileServ.saveEntity(em);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();

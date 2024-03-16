@@ -27,8 +27,8 @@ public class WebSocketController {
     @MessageMapping("/chat")
     @SendTo("/topic/messages")
     public Message chat(ChatMessage message) {
-        Profile sender = profileServ.getProfile(message.getSenderProfileId());
-        Profile receiver = profileServ.getProfile(message.getReceiverProfileId());
+        Profile sender = profileServ.getEntity(message.getSenderProfileId());
+        Profile receiver = profileServ.getEntity(message.getReceiverProfileId());
         Message newMessage = null;
         if(sender != null && receiver != null){
             newMessage = new Message(null, LocalDateTime.now(),sender,receiver,message.getContent(),null);

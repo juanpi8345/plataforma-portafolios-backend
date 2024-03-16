@@ -16,7 +16,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/profile/")
+@RequestMapping("/profile")
 @CrossOrigin("http://localhost:4200/")
 @Valid
 public class ProfileController {
@@ -28,12 +28,20 @@ public class ProfileController {
 
     @GetMapping("/get/{profileId}")
     public ResponseEntity<Profile> getProfile(@PathVariable Long profileId){
-        return ResponseEntity.ok(profileServ.getProfile(profileId));
+        return ResponseEntity.ok(profileServ.getEntity(profileId));
     }
 
     @GetMapping("/get/image")
-    public ResponseEntity<byte[]> getProfileImage(Principal principal) {
+    public ResponseEntity<byte[]> getImage(Principal principal) {
         Profile profile = userServ.getLogedUser(principal).getProfile();
+        if (profile == null || profile.getImage() == null)
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(profile.getImage());
+    }
+
+    @GetMapping("/{profileId}/get/image")
+    public ResponseEntity<byte[]> getProfileImage(@PathVariable Long profileId) {
+        Profile profile = profileServ.getEntity(profileId);
         if (profile == null || profile.getImage() == null)
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(profile.getImage());
@@ -54,7 +62,7 @@ public class ProfileController {
         Profile profile = userServ.getLogedUser(principal).getProfile();
         if(profile != null){
             profile.setOccupations(occupations);
-            profileServ.saveProfile(profile);
+            profileServ.saveEntity(profile);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
@@ -77,7 +85,7 @@ public class ProfileController {
         Profile profile = userServ.getLogedUser(principal).getProfile();
         if(profile != null){
             profile.setName(name);
-            profileServ.saveProfile(profile);
+            profileServ.saveEntity(profile);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
@@ -88,7 +96,7 @@ public class ProfileController {
         Profile profile = userServ.getLogedUser(principal).getProfile();
         if(profile != null){
             profile.setDescription(description);
-            profileServ.saveProfile(profile);
+            profileServ.saveEntity(profile);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
