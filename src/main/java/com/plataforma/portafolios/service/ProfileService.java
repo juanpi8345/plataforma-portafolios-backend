@@ -1,5 +1,7 @@
 package com.plataforma.portafolios.service;
 
+import com.plataforma.portafolios.exceptions.EntitiesNotFoundException;
+import com.plataforma.portafolios.exceptions.EntityNotFoundException;
 import com.plataforma.portafolios.model.Employee;
 import com.plataforma.portafolios.model.Employer;
 import com.plataforma.portafolios.model.Profile;
@@ -17,11 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class ProfileService implements IProfileService{
@@ -37,7 +35,7 @@ public class ProfileService implements IProfileService{
 
     //skills could be employees' skills or searched skills in case of employers
     @Override
-    public <E> List<E> getRecommendedProfiles(Profile profile) {
+    public <E> List<E> getRecommendedProfiles(Profile profile) throws EntitiesNotFoundException {
         List<E> profileList;
         int count = 0;
         Random random = new Random();
@@ -53,6 +51,8 @@ public class ProfileService implements IProfileService{
             profileList = (List<E>)  employerRepo.findBySkills(employee.getSkills().get(random.nextInt(skillsSize))
                             ,employee.getSkills().get(random.nextInt(skillsSize)),employee.getSkills().get(random.nextInt(skillsSize)));
         }
+        if(profileList.isEmpty())
+            throw new EntitiesNotFoundException("There are not recommended profiles");
         return profileList;
     }
 
@@ -64,8 +64,11 @@ public class ProfileService implements IProfileService{
     }
 
     @Override
-    public Profile getEntity(Long id) {
-        return profileRepo.findById(id).orElse(null);
+    public Profile getEntity(Long id) throws EntityNotFoundException {
+        Optional<Profile> profile = profileRepo.findById(id);
+        if(!profile.isPresent())
+            throw new EntityNotFoundException("Profile not available");
+        return profile.get();
     }
 
     @Override
@@ -75,12 +78,18 @@ public class ProfileService implements IProfileService{
     }
 
     @Override
-    public void deleteEntity(Long id) {
+    public void deleteEntity(Long id) throws EntityNotFoundException {
+        Optional<Profile> profile = profileRepo.findById(id);
+        if(!profile.isPresent())
+            throw new EntityNotFoundException("Profile not found");
         profileRepo.deleteById(id);
     }
 
     @Override
-    public void editEntity(Profile profile) {
-
+    public void editEntity(Profile profile) throws EntityNotFoundException {
+        Optional<Profile> pr = profileRepo.findById(profile.getProfileId());
+        if(!pr.isPresent())
+            throw new EntityNotFoundException("Profile not found");
+        this.saveEntity(profile);
     }
 }

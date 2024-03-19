@@ -1,5 +1,7 @@
 package com.plataforma.portafolios.controller;
 
+import com.plataforma.portafolios.exceptions.EntitiesNotFoundException;
+import com.plataforma.portafolios.exceptions.EntityNotFoundException;
 import com.plataforma.portafolios.model.Employee;
 import com.plataforma.portafolios.model.Profile;
 import com.plataforma.portafolios.service.IProfileService;
@@ -27,20 +29,20 @@ public class ProfileController {
     private IProfileService profileServ;
 
     @GetMapping("/get/{profileId}")
-    public ResponseEntity<Profile> getProfile(@PathVariable Long profileId){
+    public ResponseEntity<Profile> getProfile(@PathVariable Long profileId) throws EntityNotFoundException {
         return ResponseEntity.ok(profileServ.getEntity(profileId));
     }
 
     @GetMapping("/get/image")
     public ResponseEntity<byte[]> getImage(Principal principal) {
-        Profile profile = userServ.getLogedUser(principal).getProfile();
+        Profile profile = userServ.getLoggedUser(principal).getProfile();
         if (profile == null || profile.getImage() == null)
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(profile.getImage());
     }
 
     @GetMapping("/{profileId}/get/image")
-    public ResponseEntity<byte[]> getProfileImage(@PathVariable Long profileId) {
+    public ResponseEntity<byte[]> getProfileImage(@PathVariable Long profileId) throws EntityNotFoundException {
         Profile profile = profileServ.getEntity(profileId);
         if (profile == null || profile.getImage() == null)
             return ResponseEntity.notFound().build();
@@ -49,8 +51,8 @@ public class ProfileController {
 
 
     @GetMapping("/get/recommended")
-    public <E> ResponseEntity<List<E>> getRecommendedProfiles(Principal principal){
-        Profile profile = userServ.getLogedUser(principal).getProfile();
+    public <E> ResponseEntity<List<E>> getRecommendedProfiles(Principal principal) throws EntitiesNotFoundException {
+        Profile profile = userServ.getLoggedUser(principal).getProfile();
         if (profile != null)
             return ResponseEntity.ok(profileServ.getRecommendedProfiles(profile));
         return ResponseEntity.badRequest().build();
@@ -59,7 +61,7 @@ public class ProfileController {
 
     @PutMapping("/edit/occupation")
     public ResponseEntity<?> editOccupation(Principal principal, @RequestParam String occupations){
-        Profile profile = userServ.getLogedUser(principal).getProfile();
+        Profile profile = userServ.getLoggedUser(principal).getProfile();
         if(profile != null){
             profile.setOccupations(occupations);
             profileServ.saveEntity(profile);
@@ -70,7 +72,7 @@ public class ProfileController {
 
     @PostMapping("/add/image")
     public ResponseEntity<?> uploadImage(Principal principal, @RequestParam MultipartFile file) throws IOException {
-        Profile profile = userServ.getLogedUser(principal).getProfile();
+        Profile profile = userServ.getLoggedUser(principal).getProfile();
         if (profile == null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         if (file.isEmpty())
@@ -82,7 +84,7 @@ public class ProfileController {
 
     @PutMapping("/edit/name")
     public ResponseEntity<?> editName(Principal principal, @RequestParam String name){
-        Profile profile = userServ.getLogedUser(principal).getProfile();
+        Profile profile = userServ.getLoggedUser(principal).getProfile();
         if(profile != null){
             profile.setName(name);
             profileServ.saveEntity(profile);
@@ -93,7 +95,7 @@ public class ProfileController {
 
     @PutMapping("/edit/description")
     public ResponseEntity<?> editDescription(Principal principal, @RequestParam String description){
-        Profile profile = userServ.getLogedUser(principal).getProfile();
+        Profile profile = userServ.getLoggedUser(principal).getProfile();
         if(profile != null){
             profile.setDescription(description);
             profileServ.saveEntity(profile);

@@ -1,13 +1,14 @@
 package com.plataforma.portafolios.service;
 
+import com.plataforma.portafolios.exceptions.EntitiesNotFoundException;
+import com.plataforma.portafolios.exceptions.EntityNotFoundException;
 import com.plataforma.portafolios.model.Skill;
-import com.plataforma.portafolios.util.IGenericCrud;
 
 import java.util.List;
 
-public interface ISkillService extends IGenericCrud<Skill,Long> {
+public interface ISkillService extends IGenericService<Skill,Long> {
 
-    List<Skill> getSkillContaining(String query);
-    List<Skill> getAll();
-    Skill getSkillByTitle(String title);
+    List<Skill> getSkillContaining(String query) throws EntityNotFoundException;
+    List<Skill> getAll() throws EntitiesNotFoundException;
+    Skill getSkillByTitle(String title) throws EntityNotFoundException;
 }

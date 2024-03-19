@@ -1,5 +1,7 @@
 package com.plataforma.portafolios.service;
 
+import com.plataforma.portafolios.exceptions.EntitiesNotFoundException;
+import com.plataforma.portafolios.exceptions.EntityNotFoundException;
 import com.plataforma.portafolios.model.Employee;
 import com.plataforma.portafolios.model.Employer;
 import com.plataforma.portafolios.repository.IEmployeeRepository;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SkillService implements ISkillService {
@@ -33,20 +36,28 @@ public class SkillService implements ISkillService {
     }
 
     @Override
-    public List<Skill> getAll() {
+    public List<Skill> getAll() throws EntitiesNotFoundException {
         List<Skill> skills = skillRepo.findAll();
+        if(skills.isEmpty())
+            throw new EntitiesNotFoundException("There are not skills to show");
         skills.sort((s1, s2) -> s1.getTitle().compareToIgnoreCase(s2.getTitle()));
         return skills;
     }
 
     @Override
-    public Skill getSkillByTitle(String title) {
-        return skillRepo.findByTitle(title);
+    public Skill getSkillByTitle(String title) throws EntityNotFoundException {
+        Skill skill = skillRepo.findByTitle(title);
+        if(skill == null)
+            throw new EntityNotFoundException("Skill with title '"+title+"' does not exist");
+        return skill;
     }
 
     @Override
-    public Skill getEntity(Long skillId) {
-        return skillRepo.findById(skillId).orElse(null);
+    public Skill getEntity(Long skillId) throws EntityNotFoundException {
+        Optional<Skill> skill = skillRepo.findById(skillId);
+        if(!skill.isPresent())
+            throw new EntityNotFoundException("Skill with id: "+skill.get().getSkillId()+" does not exist");
+        return skill.get();
     }
 
     @Override
@@ -57,17 +68,22 @@ public class SkillService implements ISkillService {
     }
 
     @Override
-    public void deleteEntity(Long skillId) {
+    public void deleteEntity(Long skillId) throws EntityNotFoundException {
+        Optional<Skill> skill = skillRepo.findById(skillId);
+        if(!skill.isPresent())
+            throw new EntityNotFoundException("Skill with id: "+skill.get().getSkillId()+" does not exist");
         skillRepo.deleteById(skillId);
     }
 
     @Override
-    public void editEntity(Skill skillRequest) {
-        Skill skill = skillRepo.findById(skillRequest.getSkillId()).orElse(null);
-        if(skill != null){
-            skill.setImage(skillRequest.getImage());
-            skill.setTitle(skillRequest.getTitle());
-            skillRepo.save(skill);
-        }
+    public void editEntity(Skill skillRequest) throws EntityNotFoundException {
+        Optional<Skill> skill = skillRepo.findById(skillRequest.getSkillId());
+        if(!skill.isPresent())
+            throw new EntityNotFoundException("Skill with id: "+skill.get().getSkillId()+" does not exist");
+
+        skill.get().setImage(skillRequest.getImage());
+        skill.get().setTitle(skillRequest.getTitle());
+        skillRepo.save(skill.get());
+
     }
 }

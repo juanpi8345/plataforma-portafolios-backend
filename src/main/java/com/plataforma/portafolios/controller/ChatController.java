@@ -1,5 +1,7 @@
 package com.plataforma.portafolios.controller;
 
+import com.plataforma.portafolios.exceptions.EntitiesNotFoundException;
+import com.plataforma.portafolios.exceptions.EntityNotFoundException;
 import com.plataforma.portafolios.model.Chat;
 import com.plataforma.portafolios.model.Message;
 import com.plataforma.portafolios.repository.IMessageRepository;
@@ -21,7 +23,8 @@ public class ChatController {
     @Autowired
     private IMessageService messageServ;
     @GetMapping("/profile/{profileId}")
-    public ResponseEntity<List<Chat>>getProfileChats(@PathVariable Long profileId){
+    public ResponseEntity<List<Chat>>getProfileChats(@PathVariable Long profileId) throws EntityNotFoundException,
+            EntitiesNotFoundException {
         List<Chat> chats = chatServ.getProfileChats(profileId);
         if(chats != null){
             return ResponseEntity.ok(chats);
@@ -30,7 +33,8 @@ public class ChatController {
     }
 
     @GetMapping("/profile1/{profileId1}/profile2/{profileId2}")
-    public ResponseEntity<List<Message>> getChatMessages(@PathVariable Long profileId1,@PathVariable Long profileId2){
+    public ResponseEntity<List<Message>> getChatMessages(@PathVariable Long profileId1,@PathVariable Long profileId2) throws EntitiesNotFoundException,
+            EntityNotFoundException {
         return ResponseEntity.ok(messageServ.findMessagesByChat(profileId1,profileId2));
     }
 }

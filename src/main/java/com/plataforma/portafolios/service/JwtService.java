@@ -1,5 +1,6 @@
 package com.plataforma.portafolios.service;
 
+import com.plataforma.portafolios.exceptions.BadCredentialsException;
 import com.plataforma.portafolios.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;

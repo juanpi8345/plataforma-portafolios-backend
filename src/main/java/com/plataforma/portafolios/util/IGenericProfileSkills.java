@@ -1,5 +1,6 @@
 package com.plataforma.portafolios.util;
 
+import com.plataforma.portafolios.exceptions.EntityNotFoundException;
 import com.plataforma.portafolios.model.Employer;
 import com.plataforma.portafolios.model.Skill;
 import org.springframework.data.domain.Page;

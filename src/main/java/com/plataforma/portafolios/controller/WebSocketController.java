@@ -1,6 +1,7 @@
 package com.plataforma.portafolios.controller;
 
 import com.plataforma.portafolios.dto.ChatMessage;
+import com.plataforma.portafolios.exceptions.EntityNotFoundException;
 import com.plataforma.portafolios.model.Message;
 import com.plataforma.portafolios.model.Profile;
 import com.plataforma.portafolios.model.User;
@@ -26,7 +27,7 @@ public class WebSocketController {
 
     @MessageMapping("/chat")
     @SendTo("/topic/messages")
-    public Message chat(ChatMessage message) {
+    public Message chat(ChatMessage message) throws EntityNotFoundException {
         Profile sender = profileServ.getEntity(message.getSenderProfileId());
         Profile receiver = profileServ.getEntity(message.getReceiverProfileId());
         Message newMessage = null;

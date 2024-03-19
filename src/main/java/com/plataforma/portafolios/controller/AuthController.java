@@ -4,6 +4,9 @@ package com.plataforma.portafolios.controller;
 import com.plataforma.portafolios.dto.AuthenticationRequest;
 import com.plataforma.portafolios.dto.AuthenticationResponse;
 import com.plataforma.portafolios.dto.UserDTO;
+import com.plataforma.portafolios.exceptions.BadCredentialsException;
+import com.plataforma.portafolios.exceptions.EntityAlreadyExists;
+import com.plataforma.portafolios.exceptions.EntityNotFoundException;
 import com.plataforma.portafolios.model.User;
 import com.plataforma.portafolios.repository.IUserRepository;
 import com.plataforma.portafolios.service.AuthenticationService;
@@ -27,18 +30,18 @@ public class AuthController {
     private IUserService userServ;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request){
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request)
+            throws EntityNotFoundException, BadCredentialsException {
         return ResponseEntity.ok(authService.login(request));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody UserDTO user){
-        if(authService.register(user) != null)
-            return ResponseEntity.ok(authService.register(user));
-        return ResponseEntity.status(409).build();
+    public ResponseEntity<?> register(@RequestBody UserDTO user) throws EntityAlreadyExists {
+        authService.register(user);
+        return ResponseEntity.ok().body("User has been registered!");
     }
     @GetMapping("/get")
     public ResponseEntity<User> getLoggedUser(Principal principal){
-        return ResponseEntity.ok(userServ.getLogedUser(principal));
+        return ResponseEntity.ok(userServ.getLoggedUser(principal));
     }
 }

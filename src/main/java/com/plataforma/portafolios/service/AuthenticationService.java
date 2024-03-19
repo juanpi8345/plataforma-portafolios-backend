@@ -3,6 +3,9 @@ package com.plataforma.portafolios.service;
 import com.plataforma.portafolios.dto.AuthenticationRequest;
 import com.plataforma.portafolios.dto.AuthenticationResponse;
 import com.plataforma.portafolios.dto.UserDTO;
+import com.plataforma.portafolios.exceptions.BadCredentialsException;
+import com.plataforma.portafolios.exceptions.EntityAlreadyExists;
+import com.plataforma.portafolios.exceptions.EntityNotFoundException;
 import com.plataforma.portafolios.model.Employee;
 import com.plataforma.portafolios.model.Employer;
 import com.plataforma.portafolios.model.Profile;
@@ -30,37 +33,37 @@ public class AuthenticationService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public AuthenticationResponse login(AuthenticationRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+    public AuthenticationResponse login(AuthenticationRequest request) throws EntityNotFoundException
+                                    ,BadCredentialsException{
         UserDetails user=userRepository.findByUsername(request.getUsername());
+        if(user == null)
+            throw new EntityNotFoundException("That username does not exist");
+        if(! passwordEncoder.matches(request.getPassword(),user.getPassword()))
+            throw new BadCredentialsException("Bad credentials");
         String token=jwtService.getToken(user);
         return new AuthenticationResponse(token);
     }
 
-    public AuthenticationResponse register(UserDTO user) {
-        User userToRegister = null;
-        if (userRepository.findByUsername(user.getUsername()) == null) {
-            userToRegister = new User();
-            userToRegister.setUsername(user.getUsername());
-            userToRegister.setEmail(user.getEmail());
-            userToRegister.setPassword(passwordEncoder.encode(user.getPassword()));
-            if (user.getRole() == Role.EMPLOYEE) {
-                userToRegister.setRole(Role.EMPLOYEE);
-                Employee emp = new Employee();
-                emp.setName(user.getUsername());
-                userToRegister.setProfile((Profile) emp);
-            }
-            else{
-                userToRegister.setRole(Role.EMPLOYER);
-                Employer emp = new Employer();
-                emp.setName(user.getUsername());
-                userToRegister.setProfile((Profile) emp);
-            }
-            userRepository.save(userToRegister);
+    public void register(UserDTO user) throws EntityAlreadyExists {
+        User userToRegister = new User();
+        if(userRepository.findByUsername(user.getUsername()) != null)
+            throw new EntityAlreadyExists("That username already exists");
+        userToRegister.setUsername(user.getUsername());
+        userToRegister.setEmail(user.getEmail());
+        userToRegister.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (user.getRole() == Role.EMPLOYEE) {
+            userToRegister.setRole(Role.EMPLOYEE);
+            Employee emp = new Employee();
+            emp.setName(user.getUsername());
+            userToRegister.setProfile((Profile) emp);
         }
-        if(userToRegister!= null)
-            return new AuthenticationResponse(jwtService.getToken(userToRegister));
-        else
-            return null;
+        else{
+            userToRegister.setRole(Role.EMPLOYER);
+            Employer emp = new Employer();
+            emp.setName(user.getUsername());
+            userToRegister.setProfile((Profile) emp);
+        }
+        userRepository.save(userToRegister);
+
     }
 }

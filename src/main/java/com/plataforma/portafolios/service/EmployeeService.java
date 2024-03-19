@@ -1,5 +1,7 @@
 package com.plataforma.portafolios.service;
 
+import com.plataforma.portafolios.exceptions.EntitiesNotFoundException;
+import com.plataforma.portafolios.exceptions.EntityNotFoundException;
 import com.plataforma.portafolios.model.Employee;
 import com.plataforma.portafolios.model.Skill;
 import com.plataforma.portafolios.repository.IEmployeeRepository;
@@ -17,8 +19,11 @@ public class EmployeeService {
     @Autowired
     private IEmployeeRepository employeeRepo;
 
-    public Page<Employee> findBySkillsIn(List<Skill> skills, int page, int size){
-        return this.searchSkills.findBySkillsIn(skills,page,size);
+    public Page<Employee> findBySkillsIn(List<Skill> skills, int page, int size) throws EntitiesNotFoundException {
+        Page<Employee> employees = this.searchSkills.findBySkillsIn(skills,page,size);
+        if(employees.isEmpty())
+            throw new EntitiesNotFoundException("Employees are not available");
+        return employees;
     }
 
     public IGenericProfileSkills<Employee> searchSkills = (List<Skill> skills, int page, int size) ->{

@@ -1,5 +1,7 @@
 package com.plataforma.portafolios.controller;
 
+import com.plataforma.portafolios.exceptions.EntitiesNotFoundException;
+import com.plataforma.portafolios.exceptions.EntityNotFoundException;
 import com.plataforma.portafolios.model.Employee;
 import com.plataforma.portafolios.model.Employer;
 import com.plataforma.portafolios.model.Profile;
@@ -38,7 +40,9 @@ public class EmployerController {
 
     // this is to allow a employer  to see al the employees with the skills they search
     @GetMapping("/get/employees")
-    public ResponseEntity<Page<Employee>> getEmployeesBySkills(@RequestParam List<String> skillsStr, @RequestParam(name = "page", defaultValue = "0") int page){
+    public ResponseEntity<Page<Employee>> getEmployeesBySkills(@RequestParam List<String> skillsStr,
+                                                               @RequestParam(name = "page", defaultValue = "0") int page)
+                                                                throws EntityNotFoundException, EntitiesNotFoundException {
         List<Skill> skills = new ArrayList<Skill>();
         for(String skill : skillsStr){
             Skill skillFound = skillServ.getSkillByTitle(skill);
@@ -50,14 +54,14 @@ public class EmployerController {
 
     // this is to allow a employee to see a employer profile.
     @GetMapping("/get/employee/{profileId}")
-    public ResponseEntity<Employee> getEmployee(@PathVariable Long profileId){
+    public ResponseEntity<Employee> getEmployee(@PathVariable Long profileId) throws EntityNotFoundException {
         return ResponseEntity.ok((Employee) profileServ.getEntity(profileId));
     }
 
 
     @PostMapping("/add/searchedSkill")
-    public ResponseEntity<Skill> addSearchedSkill(@Valid @RequestParam String title, Principal principal){
-        Profile pr = userServ.getLogedUser(principal).getProfile();
+    public ResponseEntity<Skill> addSearchedSkill(@Valid @RequestParam String title, Principal principal) throws EntityNotFoundException {
+        Profile pr = userServ.getLoggedUser(principal).getProfile();
         Skill sk = skillServ.getSkillByTitle(title);
         if(pr instanceof Employer em && sk != null) {
             if(!em.getSearchedSkills().contains(sk)){
@@ -72,7 +76,7 @@ public class EmployerController {
 
     @PutMapping("/edit/searching")
     public ResponseEntity<Employer> editSearching(@RequestParam String newSearching, Principal principal){
-        Profile profile = userServ.getLogedUser(principal).getProfile();
+        Profile profile = userServ.getLoggedUser(principal).getProfile();
         if(profile!=null){
             Employer emp = (Employer) profile;
             emp.setSearching(newSearching);
@@ -84,8 +88,8 @@ public class EmployerController {
     }
 
     @DeleteMapping("/deleteSkill/{skillId}")
-    public ResponseEntity<?> deleteSearchedSkill(@PathVariable Long skillId, Principal principal){
-        Profile profile = userServ.getLogedUser(principal).getProfile();
+    public ResponseEntity<?> deleteSearchedSkill(@PathVariable Long skillId, Principal principal) throws EntityNotFoundException {
+        Profile profile = userServ.getLoggedUser(principal).getProfile();
         Skill skill = skillServ.getEntity(skillId);
         if(profile instanceof Employer em && skill!=null){
             em.getSearchedSkills().remove(skill);

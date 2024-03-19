@@ -1,5 +1,7 @@
 package com.plataforma.portafolios.service;
 
+import com.plataforma.portafolios.exceptions.EntitiesNotFoundException;
+import com.plataforma.portafolios.exceptions.EntityNotFoundException;
 import com.plataforma.portafolios.model.Chat;
 import com.plataforma.portafolios.model.Message;
 import com.plataforma.portafolios.model.Profile;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ChatService implements IChatService {
@@ -44,12 +47,15 @@ public class ChatService implements IChatService {
     }
 
     @Override
-    public List<Chat> getProfileChats(Long profileId) {
-        Profile profile = profileRepo.findById(profileId).orElse(null);
-        if(profile!= null){
-            return chatRepo.findChatsOfProfile(profile);
+    public List<Chat> getProfileChats(Long profileId) throws EntityNotFoundException, EntitiesNotFoundException {
+        Optional<Profile> profile = profileRepo.findById(profileId);
+        if(!profile.isPresent()){
+           throw new EntityNotFoundException("Profile not available");
         }
-        return null;
-
+        List<Chat> chats = chatRepo.findChatsOfProfile(profile.get());
+        if(chats.isEmpty()){
+            throw new EntitiesNotFoundException("This profile has not any chats");
+        }
+        return chats;
     }
 }

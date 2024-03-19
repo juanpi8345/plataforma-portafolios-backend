@@ -24,7 +24,7 @@ public class UserService implements IUserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public User getLogedUser(Principal principal) {
+    public User getLoggedUser(Principal principal) {
         return userRepo.findByUsername(principal.getName());
     }
 }

@@ -1,5 +1,7 @@
 package com.plataforma.portafolios.controller;
 
+import com.plataforma.portafolios.exceptions.EntitiesNotFoundException;
+import com.plataforma.portafolios.exceptions.EntityNotFoundException;
 import com.plataforma.portafolios.model.*;
 import com.plataforma.portafolios.service.*;
 import jakarta.validation.Valid;
@@ -40,7 +42,9 @@ public class EmployeeController {
 
     // this is to allow a employee to see al the employers with the skills they search
     @GetMapping("/get/employers")
-    public ResponseEntity<Page<Employer>> getEmployersBySkills(@RequestParam List<String> skillsStr, @RequestParam(name = "page", defaultValue = "0") int page){
+    public ResponseEntity<Page<Employer>> getEmployersBySkills(@RequestParam List<String> skillsStr,
+                                                               @RequestParam(name = "page", defaultValue = "0") int page)
+                                                                throws EntityNotFoundException, EntitiesNotFoundException {
         List<Skill> skills = new ArrayList<Skill>();
         for(String skill : skillsStr){
             Skill skillFound = skillServ.getSkillByTitle(skill);
@@ -53,13 +57,13 @@ public class EmployeeController {
 
     // this is to allow a employee to see a employer profile.
     @GetMapping("/get/employer/{profileId}")
-    public ResponseEntity<Employer> getEmployer(@PathVariable Long profileId){
+    public ResponseEntity<Employer> getEmployer(@PathVariable Long profileId) throws EntityNotFoundException {
         return ResponseEntity.ok((Employer) profileServ.getEntity(profileId));
     }
 
     @GetMapping("/getProject/{projectId}")
-    public ResponseEntity<Project> getUserProject(@PathVariable Long projectId, Principal principal){
-        Profile profile = userServ.getLogedUser(principal).getProfile();
+    public ResponseEntity<Project> getUserProject(@PathVariable Long projectId, Principal principal) throws EntityNotFoundException {
+        Profile profile = userServ.getLoggedUser(principal).getProfile();
         Project project = projectServ.getEntity(projectId);
         if(profile!=null && project != null){
             return ResponseEntity.ok(project);
@@ -68,8 +72,8 @@ public class EmployeeController {
     }
 
     @PostMapping("/addSkill")
-    public ResponseEntity<Skill> addSkill(@Valid @RequestParam String title, Principal principal){
-        Profile pr = userServ.getLogedUser(principal).getProfile();
+    public ResponseEntity<Skill> addSkill(@Valid @RequestParam String title, Principal principal) throws EntityNotFoundException {
+        Profile pr = userServ.getLoggedUser(principal).getProfile();
         Skill sk = skillServ.getSkillByTitle(title);
         if(pr instanceof Employee em && sk != null) {
             if(!em.getSkills().contains(sk)){
@@ -84,7 +88,7 @@ public class EmployeeController {
 
     @PostMapping("/addProject")
     public ResponseEntity<Project> addProject(@Valid @RequestBody Project project,Principal principal){
-        Profile profile = userServ.getLogedUser(principal).getProfile();
+        Profile profile = userServ.getLoggedUser(principal).getProfile();
         if(profile!=null && project != null){
             Employee employee = (Employee) profile;
             employee.getProjects().add(project);
@@ -97,9 +101,9 @@ public class EmployeeController {
     }
 
     @PutMapping("/editProject")
-    public ResponseEntity<Project> editProject(@RequestBody Project projectRequest, Principal principal) {
+    public ResponseEntity<Project> editProject(@RequestBody Project projectRequest, Principal principal) throws EntityNotFoundException {
         Project project = projectServ.getEntity(projectRequest.getProjectId());
-        Profile profile = userServ.getLogedUser(principal).getProfile();
+        Profile profile = userServ.getLoggedUser(principal).getProfile();
         if(project!= null && profile != null){
             projectServ.editEntity(project);
             return ResponseEntity.ok(project);
@@ -108,9 +112,9 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/deleteProject/{projectId}")
-    public ResponseEntity<?> deleteProject(@PathVariable Long projectId, Principal principal){
+    public ResponseEntity<?> deleteProject(@PathVariable Long projectId, Principal principal) throws EntityNotFoundException {
         Project project = projectServ.getEntity(projectId);
-        Profile profile = userServ.getLogedUser(principal).getProfile();
+        Profile profile = userServ.getLoggedUser(principal).getProfile();
         if(project != null && profile!=null){
             Employee employee = (Employee)profile;
             employee.getProjects().remove(project);
@@ -122,8 +126,8 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/deleteSkill/{skillId}")
-    public ResponseEntity<?> deleteSkill(@PathVariable Long skillId, Principal principal){
-        Profile profile = userServ.getLogedUser(principal).getProfile();
+    public ResponseEntity<?> deleteSkill(@PathVariable Long skillId, Principal principal) throws EntityNotFoundException {
+        Profile profile = userServ.getLoggedUser(principal).getProfile();
         Skill skill = skillServ.getEntity(skillId);
         if(profile instanceof Employee em && skill!=null){
             em.getSkills().remove(skill);
