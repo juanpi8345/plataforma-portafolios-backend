@@ -25,11 +25,7 @@ public class ChatController {
     @GetMapping("/profile/{profileId}")
     public ResponseEntity<List<Chat>>getProfileChats(@PathVariable Long profileId) throws EntityNotFoundException,
             EntitiesNotFoundException {
-        List<Chat> chats = chatServ.getProfileChats(profileId);
-        if(chats != null){
-            return ResponseEntity.ok(chats);
-        }
-        return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(chatServ.getProfileChats(profileId));
     }
 
     @GetMapping("/profile1/{profileId1}/profile2/{profileId2}")
