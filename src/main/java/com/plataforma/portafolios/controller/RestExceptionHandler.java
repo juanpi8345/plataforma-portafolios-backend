@@ -1,10 +1,7 @@
 package com.plataforma.portafolios.controller;
 
 import com.plataforma.portafolios.dto.ErrorMessage;
-import com.plataforma.portafolios.exceptions.BadCredentialsException;
-import com.plataforma.portafolios.exceptions.EntitiesNotFoundException;
-import com.plataforma.portafolios.exceptions.EntityAlreadyExists;
-import com.plataforma.portafolios.exceptions.EntityNotFoundException;
+import com.plataforma.portafolios.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -39,6 +36,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(EntityAlreadyExists.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorMessage> entityAlreadyExists(EntityAlreadyExists e){
+        ErrorMessage err = new ErrorMessage(HttpStatus.BAD_REQUEST,e.getMessage().toUpperCase());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+    }
+
+    @ExceptionHandler(InvalidEntityException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorMessage> InvalidEntity(InvalidEntityException e){
         ErrorMessage err = new ErrorMessage(HttpStatus.BAD_REQUEST,e.getMessage().toUpperCase());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }

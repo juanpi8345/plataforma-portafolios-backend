@@ -72,7 +72,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/addSkill")
-    public ResponseEntity<Skill> addSkill(@Valid @RequestParam String title, Principal principal) throws EntityNotFoundException {
+    public ResponseEntity<Skill> addSkill(@RequestParam String title, Principal principal) throws EntityNotFoundException {
         Profile pr = userServ.getLoggedUser(principal).getProfile();
         Skill sk = skillServ.getSkillByTitle(title);
         if(pr instanceof Employee em && sk != null) {

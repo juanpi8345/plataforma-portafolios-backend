@@ -16,7 +16,6 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@Validated
 @RequestMapping("/skills")
 @CrossOrigin("http://localhost:4200/")
 public class SkillController {

@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
