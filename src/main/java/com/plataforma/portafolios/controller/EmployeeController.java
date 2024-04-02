@@ -1,7 +1,9 @@
 package com.plataforma.portafolios.controller;
 
+import com.plataforma.portafolios.dto.ProjectDTO;
 import com.plataforma.portafolios.exceptions.EntitiesNotFoundException;
 import com.plataforma.portafolios.exceptions.EntityNotFoundException;
+import com.plataforma.portafolios.exceptions.UserNotLoggedException;
 import com.plataforma.portafolios.model.*;
 import com.plataforma.portafolios.service.*;
 import jakarta.validation.Valid;
@@ -19,12 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/employee/")
+@RequestMapping("/employee")
 @CrossOrigin("http://localhost:4200/")
 @Validated
 public class EmployeeController {
     @Autowired
     private IUserService userServ;
+
     @Autowired
     private EmployeeService employeeServ;
 
@@ -61,18 +64,30 @@ public class EmployeeController {
         return ResponseEntity.ok((Employer) profileServ.getEntity(profileId));
     }
 
-    @GetMapping("/getProject/{projectId}")
-    public ResponseEntity<Project> getUserProject(@PathVariable Long projectId, Principal principal) throws EntityNotFoundException {
-        Profile profile = userServ.getLoggedUser(principal).getProfile();
+    @GetMapping("/get/project/{projectId}")
+    public ResponseEntity<Project> getUserProject(@PathVariable Long projectId) throws EntityNotFoundException, UserNotLoggedException {
         Project project = projectServ.getEntity(projectId);
-        if(profile!=null && project != null){
-            return ResponseEntity.ok(project);
-        }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(project);
     }
 
-    @PostMapping("/addSkill")
-    public ResponseEntity<Skill> addSkill(@RequestParam String title, Principal principal) throws EntityNotFoundException {
+    @GetMapping("/get/project/{projectId}/image")
+    public ResponseEntity<byte[]> getProjectImage(@PathVariable Long projectId) throws EntityNotFoundException {
+        Project project = projectServ.getEntity(projectId);
+        return ResponseEntity.ok(project.getImage());
+    }
+
+    @PostMapping("/project/{projectId}/add/image")
+    public ResponseEntity<?> uploadImage(@RequestParam MultipartFile file,
+                                         @PathVariable Long projectId) throws IOException, EntityNotFoundException, UserNotLoggedException {
+        if (file.isEmpty())
+            return ResponseEntity.badRequest().body("Image is empty.");
+        Project project = projectServ.getEntity(projectId);
+        projectServ.uploadImage(project.getProjectId(),file);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/add/skill")
+    public ResponseEntity<Skill> addSkill(@RequestParam String title, Principal principal) throws EntityNotFoundException, UserNotLoggedException {
         Profile pr = userServ.getLoggedUser(principal).getProfile();
         Skill sk = skillServ.getSkillByTitle(title);
         if(pr instanceof Employee em && sk != null) {
@@ -86,47 +101,50 @@ public class EmployeeController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/addProject")
-    public ResponseEntity<Project> addProject(@Valid @RequestBody Project project,Principal principal){
+    @PostMapping("/add/project")
+    public ResponseEntity<Project> addProject(@RequestBody @Valid ProjectDTO project, Principal principal) throws IOException, UserNotLoggedException {
         Profile profile = userServ.getLoggedUser(principal).getProfile();
         if(profile!=null && project != null){
+            Project pr = Project.builder()
+                    .start(project.getStart())
+                    .end(project.getEnd())
+                    .description(project.getDescription())
+                    .name(project.getName()).build();
+
             Employee employee = (Employee) profile;
-            employee.getProjects().add(project);
-            project.setEmployee(employee);
+            employee.getProjects().add(pr);
             profileServ.saveEntity(employee);
-            projectServ.saveEntity(project);
-            return ResponseEntity.ok(project);
+            pr.setEmployee(employee);
+            projectServ.saveEntity(pr);
+            return ResponseEntity.ok(pr);
         }
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/editProject")
-    public ResponseEntity<Project> editProject(@RequestBody Project projectRequest, Principal principal) throws EntityNotFoundException {
+    @PutMapping("/edit/project")
+    public ResponseEntity<Project> editProject(@RequestBody Project projectRequest, Principal principal) throws EntityNotFoundException, UserNotLoggedException {
         Project project = projectServ.getEntity(projectRequest.getProjectId());
         Profile profile = userServ.getLoggedUser(principal).getProfile();
-        if(project!= null && profile != null){
-            projectServ.editEntity(project);
-            return ResponseEntity.ok(project);
-        }
-        return ResponseEntity.notFound().build();
+        projectServ.editEntity(project);
+        return ResponseEntity.ok(project);
+
     }
 
-    @DeleteMapping("/deleteProject/{projectId}")
-    public ResponseEntity<?> deleteProject(@PathVariable Long projectId, Principal principal) throws EntityNotFoundException {
+    @DeleteMapping("/delete/project/{projectId}")
+    public ResponseEntity<?> deleteProject(@PathVariable Long projectId, Principal principal) throws EntityNotFoundException, UserNotLoggedException {
         Project project = projectServ.getEntity(projectId);
         Profile profile = userServ.getLoggedUser(principal).getProfile();
-        if(project != null && profile!=null){
-            Employee employee = (Employee)profile;
-            employee.getProjects().remove(project);
-            projectServ.deleteEntity(projectId);
-            profileServ.saveEntity(employee);
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
+        Employee employee = (Employee)profile;
+        employee.getProjects().remove(project);
+        projectServ.deleteEntity(projectId);
+        profileServ.saveEntity(employee);
+        return ResponseEntity.ok().build();
+
+
     }
 
-    @DeleteMapping("/deleteSkill/{skillId}")
-    public ResponseEntity<?> deleteSkill(@PathVariable Long skillId, Principal principal) throws EntityNotFoundException {
+    @DeleteMapping("/delete/skill/{skillId}")
+    public ResponseEntity<?> deleteSkill(@PathVariable Long skillId, Principal principal) throws EntityNotFoundException, UserNotLoggedException {
         Profile profile = userServ.getLoggedUser(principal).getProfile();
         Skill skill = skillServ.getEntity(skillId);
         if(profile instanceof Employee em && skill!=null){
@@ -136,6 +154,13 @@ public class EmployeeController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/delete/project/{projectId}/image")
+    public ResponseEntity<?> deleteProjectImage(@PathVariable Long projectId) throws EntityNotFoundException {
+        Project project = projectServ.getEntity(projectId);
+        projectServ.deleteImage(project);
+        return ResponseEntity.ok().build();
     }
 
 }

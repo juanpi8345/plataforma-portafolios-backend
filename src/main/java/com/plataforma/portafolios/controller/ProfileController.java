@@ -2,8 +2,10 @@ package com.plataforma.portafolios.controller;
 
 import com.plataforma.portafolios.exceptions.EntitiesNotFoundException;
 import com.plataforma.portafolios.exceptions.EntityNotFoundException;
+import com.plataforma.portafolios.exceptions.UserNotLoggedException;
 import com.plataforma.portafolios.model.Employee;
 import com.plataforma.portafolios.model.Profile;
+import com.plataforma.portafolios.model.Project;
 import com.plataforma.portafolios.service.IProfileService;
 import com.plataforma.portafolios.service.IUserService;
 import jakarta.validation.Valid;
@@ -34,12 +36,13 @@ public class ProfileController {
     }
 
     @GetMapping("/get/image")
-    public ResponseEntity<byte[]> getImage(Principal principal) {
+    public ResponseEntity<byte[]> getProfileImage(Principal principal) throws UserNotLoggedException {
         Profile profile = userServ.getLoggedUser(principal).getProfile();
-        if (profile == null || profile.getImage() == null)
+        if (profile.getImage() == null)
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(profile.getImage());
     }
+
 
     @GetMapping("/{profileId}/get/image")
     public ResponseEntity<byte[]> getProfileImage(@PathVariable Long profileId) throws EntityNotFoundException {
@@ -49,58 +52,51 @@ public class ProfileController {
         return ResponseEntity.ok(profile.getImage());
     }
 
-
     @GetMapping("/get/recommended")
-    public <E> ResponseEntity<List<E>> getRecommendedProfiles(Principal principal) throws EntitiesNotFoundException {
+    public <E> ResponseEntity<List<E>> getRecommendedProfiles(Principal principal) throws EntitiesNotFoundException, UserNotLoggedException {
         Profile profile = userServ.getLoggedUser(principal).getProfile();
-        if (profile != null)
-            return ResponseEntity.ok(profileServ.getRecommendedProfiles(profile));
-        return ResponseEntity.badRequest().build();
-
+        return ResponseEntity.ok(profileServ.getRecommendedProfiles(profile));
     }
 
     @PutMapping("/edit/occupation")
-    public ResponseEntity<?> editOccupation(Principal principal, @RequestParam String occupations){
+    public ResponseEntity<?> editOccupation(Principal principal, @RequestParam String occupations) throws UserNotLoggedException {
         Profile profile = userServ.getLoggedUser(principal).getProfile();
-        if(profile != null){
-            profile.setOccupations(occupations);
-            profileServ.saveEntity(profile);
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.badRequest().build();
+        profile.setOccupations(occupations);
+        profileServ.saveEntity(profile);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/add/image")
-    public ResponseEntity<?> uploadImage(Principal principal, @RequestParam MultipartFile file) throws IOException {
+    public ResponseEntity<?> uploadImage(Principal principal, @RequestParam MultipartFile file) throws IOException, EntityNotFoundException, UserNotLoggedException {
         Profile profile = userServ.getLoggedUser(principal).getProfile();
-        if (profile == null)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         if (file.isEmpty())
-            return ResponseEntity.badRequest().body("La imagen está vacía.");
+            return ResponseEntity.badRequest().body("Image is empty.");
 
         profileServ.uploadImage(profile.getProfileId(),file);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/edit/name")
-    public ResponseEntity<?> editName(Principal principal, @RequestParam String name){
+    public ResponseEntity<?> editName(Principal principal, @RequestParam String name) throws UserNotLoggedException {
         Profile profile = userServ.getLoggedUser(principal).getProfile();
-        if(profile != null){
-            profile.setName(name);
-            profileServ.saveEntity(profile);
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.badRequest().build();
+        profile.setName(name);
+        profileServ.saveEntity(profile);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/edit/description")
-    public ResponseEntity<?> editDescription(Principal principal, @RequestParam String description){
+    public ResponseEntity<?> editDescription(Principal principal, @RequestParam String description) throws UserNotLoggedException {
         Profile profile = userServ.getLoggedUser(principal).getProfile();
-        if(profile != null){
-            profile.setDescription(description);
-            profileServ.saveEntity(profile);
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.badRequest().build();
+        profile.setDescription(description);
+        profileServ.saveEntity(profile);
+        return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/delete/image")
+    public ResponseEntity<?> deleteImage(Principal principal) throws IOException, EntityNotFoundException, UserNotLoggedException {
+        Profile profile = userServ.getLoggedUser(principal).getProfile();
+        profileServ.deleteImage(profile);
+        return ResponseEntity.ok().build();
+    }
+
 }

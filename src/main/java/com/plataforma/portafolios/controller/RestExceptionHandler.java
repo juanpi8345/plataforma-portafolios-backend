@@ -33,6 +33,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
     }
 
+    @ExceptionHandler(UserNotLoggedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<ErrorMessage> userNotLogged(UserNotLoggedException e){
+        ErrorMessage err = new ErrorMessage(HttpStatus.UNAUTHORIZED,e.getMessage().toUpperCase());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
+    }
+
     @ExceptionHandler(EntityAlreadyExists.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorMessage> entityAlreadyExists(EntityAlreadyExists e){

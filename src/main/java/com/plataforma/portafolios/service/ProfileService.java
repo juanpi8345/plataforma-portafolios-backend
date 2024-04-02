@@ -42,11 +42,15 @@ public class ProfileService implements IProfileService{
         int skillsSize = 0;
         if(profile instanceof Employer){
             Employer employer = (Employer) profile;
+            if(employer.getSearchedSkills().isEmpty())
+                throw new EntitiesNotFoundException("Employer is not searching any skills");
             skillsSize = employer.getSearchedSkills().size();
             profileList = (List<E>)  employeeRepo.findBySkills(employer.getSearchedSkills().get(random.nextInt(skillsSize))
             ,employer.getSearchedSkills().get(random.nextInt(skillsSize)),employer.getSearchedSkills().get(random.nextInt(skillsSize)));
         }else{
             Employee employee = (Employee) profile;
+            if(employee.getSkills().isEmpty())
+                throw new EntitiesNotFoundException("Employee does not have any skill");
             skillsSize = employee.getSkills().size();
             profileList = (List<E>)  employerRepo.findBySkills(employee.getSkills().get(random.nextInt(skillsSize))
                             ,employee.getSkills().get(random.nextInt(skillsSize)),employee.getSkills().get(random.nextInt(skillsSize)));
@@ -57,9 +61,19 @@ public class ProfileService implements IProfileService{
     }
 
     @Override
-    public void uploadImage(Long profileId, MultipartFile imageFile) throws IOException {
+    public void uploadImage(Long profileId, MultipartFile imageFile) throws IOException,EntityNotFoundException {
         Profile profile = profileRepo.findById(profileId).orElse(null);
+        if(profile == null)
+            throw new EntityNotFoundException("Profile with id "+profile.getProfileId() + " does not exist");
         profile.setImage(imageFile.getBytes());
+        profileRepo.save(profile);
+    }
+
+    @Override
+    public void deleteImage(Profile profile) throws EntityNotFoundException {
+        if(profileRepo.findById(profile.getProfileId()).isEmpty())
+            throw new EntityNotFoundException("Profile with id "+profile.getProfileId() + " does not exist");
+        profile.setImage(null);
         profileRepo.save(profile);
     }
 

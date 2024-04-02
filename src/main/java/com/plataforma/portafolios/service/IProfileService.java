@@ -7,9 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-public interface IProfileService extends IGenericService<Profile,Long> {
-
-    void uploadImage(Long profileId, MultipartFile imageFile) throws IOException;
+public interface IProfileService extends IGenericService<Profile,Long>, IImageService<Profile,Long> {
 
     //this method will return recommended users, like employees or employers
     //E will be employers or employees

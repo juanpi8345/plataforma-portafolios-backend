@@ -2,6 +2,7 @@ package com.plataforma.portafolios.controller;
 
 import com.plataforma.portafolios.exceptions.EntitiesNotFoundException;
 import com.plataforma.portafolios.exceptions.EntityNotFoundException;
+import com.plataforma.portafolios.exceptions.UserNotLoggedException;
 import com.plataforma.portafolios.model.Employee;
 import com.plataforma.portafolios.model.Employer;
 import com.plataforma.portafolios.model.Profile;
@@ -60,7 +61,7 @@ public class EmployerController {
 
 
     @PostMapping("/add/searchedSkill")
-    public ResponseEntity<Skill> addSearchedSkill(@Valid @RequestParam String title, Principal principal) throws EntityNotFoundException {
+    public ResponseEntity<Skill> addSearchedSkill(@Valid @RequestParam String title, Principal principal) throws EntityNotFoundException, UserNotLoggedException {
         Profile pr = userServ.getLoggedUser(principal).getProfile();
         Skill sk = skillServ.getSkillByTitle(title);
         if(pr instanceof Employer em && sk != null) {
@@ -75,7 +76,7 @@ public class EmployerController {
     }
 
     @PutMapping("/edit/searching")
-    public ResponseEntity<Employer> editSearching(@RequestParam String newSearching, Principal principal){
+    public ResponseEntity<Employer> editSearching(@RequestParam String newSearching, Principal principal) throws UserNotLoggedException {
         Profile profile = userServ.getLoggedUser(principal).getProfile();
         if(profile!=null){
             Employer emp = (Employer) profile;
@@ -87,8 +88,8 @@ public class EmployerController {
 
     }
 
-    @DeleteMapping("/deleteSkill/{skillId}")
-    public ResponseEntity<?> deleteSearchedSkill(@PathVariable Long skillId, Principal principal) throws EntityNotFoundException {
+    @DeleteMapping("/delete/skill/{skillId}")
+    public ResponseEntity<?> deleteSearchedSkill(@PathVariable Long skillId, Principal principal) throws EntityNotFoundException, UserNotLoggedException {
         Profile profile = userServ.getLoggedUser(principal).getProfile();
         Skill skill = skillServ.getEntity(skillId);
         if(profile instanceof Employer em && skill!=null){

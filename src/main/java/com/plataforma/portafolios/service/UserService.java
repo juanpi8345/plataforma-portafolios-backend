@@ -2,6 +2,7 @@ package com.plataforma.portafolios.service;
 
 import com.plataforma.portafolios.config.security.SecurityBeansInjector;
 import com.plataforma.portafolios.dto.UserDTO;
+import com.plataforma.portafolios.exceptions.UserNotLoggedException;
 import com.plataforma.portafolios.model.Skill;
 import com.plataforma.portafolios.model.User;
 import com.plataforma.portafolios.repository.IUserRepository;
@@ -24,7 +25,10 @@ public class UserService implements IUserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public User getLoggedUser(Principal principal) {
-        return userRepo.findByUsername(principal.getName());
+    public User getLoggedUser(Principal principal) throws UserNotLoggedException {
+        User user = userRepo.findByUsername(principal.getName());
+        if(user == null)
+            throw new UserNotLoggedException("User not logged");
+        return user;
     }
 }

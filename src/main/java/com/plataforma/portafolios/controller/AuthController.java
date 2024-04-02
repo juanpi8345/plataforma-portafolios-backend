@@ -4,10 +4,7 @@ package com.plataforma.portafolios.controller;
 import com.plataforma.portafolios.dto.AuthenticationRequest;
 import com.plataforma.portafolios.dto.AuthenticationResponse;
 import com.plataforma.portafolios.dto.UserDTO;
-import com.plataforma.portafolios.exceptions.BadCredentialsException;
-import com.plataforma.portafolios.exceptions.EntityAlreadyExists;
-import com.plataforma.portafolios.exceptions.EntityNotFoundException;
-import com.plataforma.portafolios.exceptions.InvalidEntityException;
+import com.plataforma.portafolios.exceptions.*;
 import com.plataforma.portafolios.model.User;
 import com.plataforma.portafolios.repository.IUserRepository;
 import com.plataforma.portafolios.service.AuthenticationService;
@@ -42,15 +39,15 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody @Valid UserDTO user, BindingResult bindingResult
+    public ResponseEntity<String> register(@RequestBody @Valid UserDTO user, BindingResult bindingResult
     ) throws EntityAlreadyExists,InvalidEntityException {
         if(bindingResult.hasErrors())
             throw new InvalidEntityException("Incomplete or invalid fields");
         authService.register(user);
-        return ResponseEntity.ok().body("User has been registered!");
+        return ResponseEntity.ok().build();
     }
     @GetMapping("/get")
-    public ResponseEntity<User> getLoggedUser(Principal principal){
+    public ResponseEntity<User> getLoggedUser(Principal principal) throws UserNotLoggedException {
         return ResponseEntity.ok(userServ.getLoggedUser(principal));
     }
 }
